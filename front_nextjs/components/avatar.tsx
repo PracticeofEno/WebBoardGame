@@ -17,6 +17,8 @@ export default function homeAvatar() {
             src={avatar}
             alt="Picture of the author"
             fill={true}
+            sizes="100vw, 50vw,33vw"
+            priority={true}
             className={`avatarImg`}
           />
           <button

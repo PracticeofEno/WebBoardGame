@@ -1,5 +1,6 @@
 import { useState } from "react";
 import HomeAvatar from "./avatar";
+import {Login} from "../pages/user"
 
 export default function TabData() {
   const [nickname, setNickname] = useState("");
@@ -12,6 +13,12 @@ export default function TabData() {
     newAvatar = newAvatar + tmp + ".svg";
     setAvatar(newAvatar);
   }
+
+  async function login() {
+    let tmp = await Login(nickname, "");
+    console.log(tmp);
+  }
+
   return (
     <div className={`data`}>
       <div style={{height:'70%'}}>
@@ -33,7 +40,7 @@ export default function TabData() {
       </div>
       </div>
       <div style={{height: '25%'}}>
-        <button className={`loginButton`}>
+        <button onClick={login} className={`loginButton`}>
           <i></i>
           <strong>시작하기</strong>
         </button>

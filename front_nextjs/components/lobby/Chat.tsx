@@ -24,6 +24,7 @@ export default function Chat() {
     return (
       <div className={`chat`}>
         <div className={'chatUI'}>
+            <h1 className={`text-3xl font-bold underline`}>aa</h1>
             <input
                 onChange={(e) => setMessage(e.target.value)}
                 className={`inputText`}

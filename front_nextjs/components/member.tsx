@@ -1,5 +1,6 @@
 import { useState } from "react";
 import HomeAvatar from "./avatar";
+import { addUser } from "../pages/user";
 
 export default function MemberRender() {
   const [nickname, setNickname] = useState("");
@@ -12,6 +13,11 @@ export default function MemberRender() {
     newAvatar = avatar.substring(0, 15);
     newAvatar = newAvatar + tmp + ".svg";
     setAvatar(newAvatar);
+  }
+
+  async function postUser() {
+    let tmp = await addUser(nickname, password);
+    console.log(tmp);
   }
 
   return (
@@ -102,8 +108,8 @@ export default function MemberRender() {
           </span>
         </div>
       </div>
-      <div style={{ height: "25%" }}>
-        <button className={`loginButton`}>
+      <div style={{height: '25%', borderStyle:'solid none none', borderTop:'solid', borderColor:'white', borderWidth: '1px' }}>
+        <button onClick={ postUser } className={`loginButton border-2 border-white-100`}>
           <i></i>
           <strong>시작하기</strong>
         </button>
@@ -155,7 +161,8 @@ export default function MemberRender() {
           .inputText {
             position: relative;
             width: 100%;
-            height: 85%;
+            top: 20%;
+            height: 40%;
             display: block;
             background-color: rgba(255, 255, 255, 0.3);
             border: 2px solid rgba(255, 255, 255, 0.7);

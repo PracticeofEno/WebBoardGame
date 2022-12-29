@@ -39,8 +39,8 @@ export default function TabData() {
         </span>
       </div>
       </div>
-      <div style={{height: '25%'}}>
-        <button onClick={login} className={`loginButton`}>
+      <div style={{height: '25%', borderStyle:'solid none none', borderTop:'solid', borderColor:'white', borderWidth: '1px' }}>
+        <button onClick={login} className={`loginButton border-2 border-white-400`}>
           <i></i>
           <strong>시작하기</strong>
         </button>

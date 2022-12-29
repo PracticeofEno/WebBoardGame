@@ -9,17 +9,17 @@ export default function MainPage({ children, home }) {
   const [tabStatus, setTabStatus] = useState("anonymous");
 
   return (
-    <div className={`screen`}>
-      <div className={`tabsDiv`}>
-        <div className={`tab`}>
+    <div className="absolute justify-center w-5/6 h-4/6 left-20 top-20 flex flex-col rounded-3xl shadow-xl border-4 border-gray-400">
+      <div className="flex flex-col w-full px-20 h-2/3  relative rounded-3xl">
+        <div className="flex h-1/6 flex-row">
           <span
-            className={tabStatus === "anonymous" ? "active" : "nonactive"}
+            className={`flex justify-center w-1/2 text-xl items-center rounded-xl  ${tabStatus === "anonymous" ? "active" : "nonactive"}`}
             onClick={() => setTabStatus("anonymous")}
           >
             익명
           </span>
           <span
-            className={tabStatus === "member" ? "active" : "nonactive"}
+            className={`flex justify-center w-1/2 text-xl items-center rounded-xl  ${tabStatus === "member" ? "active" : "nonactive"}`}
             onClick={() => setTabStatus("member")}
           >
             회원
@@ -31,46 +31,9 @@ export default function MainPage({ children, home }) {
 
       <style jsx>
         {`
-          .screen {
-            border: 4px rgba(14, 14, 10, 0.15) solid;
-            box-shadow: inset 0px 2px 0px 0px rgba(255, 255, 255, 0.15),
-              0px 3px 0px 0px rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            position: absolute;
-            top: 20%;
-            left: 20%;
-            width: 65%;
-            height: 60%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-          }
-
-          .tabsDiv {
-            border: 2px rgba(61, 11, 175, 0.15) solid;
-            border-radius: 12px;
-            max-width: 100%;
-            left: 15%;
-            width: 70%;
-            height: 60%;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-          }
-          .tab {
-            display: flex;
-            flex-direction: row;
-            height: 20%;
-          }
           .active {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-width: 12px;
-            font-size: 21px;
-            width: 50%;
+            border-width: 2px;
             background-color: rgba(80, 24, 81, 0.25);
-            border-radius: 10px 10px 0px 0px;
             color: rgb(92, 255, 182);
             text-shadow: rgb(23, 5, 87) 3px 0px 0px,
               rgb(23, 5, 87) 2.83487px 0.981584px 0px,

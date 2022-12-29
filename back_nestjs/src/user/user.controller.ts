@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 import { UserService } from "./user.service";
 
 @Controller('user')
@@ -8,7 +8,14 @@ export class UserController {
     ){}
 
     @Get('/')
-    login(@Query("email") email: string) {
+    login(@Query("nickname") nickname: string, @Query("password") password :string) {
+        let ret = this.userService.login(nickname, password);
+        var tmp = {...ret};
+        return tmp;
+    }
 
+    @Post('/')
+    addUser(@Query("nickname") nickname: string, @Query("password") password :string) {
+        return this.userService.addUser(nickname, password);
     }
 }

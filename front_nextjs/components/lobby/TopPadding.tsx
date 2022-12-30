@@ -1,7 +1,7 @@
 
 export default function TopPadding() {
     return (
-        <div className={`tmp`}>
+        <div className={`tmp `}>
             
         <style jsx>{`
             .tmp {

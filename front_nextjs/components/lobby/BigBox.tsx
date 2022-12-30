@@ -1,11 +1,10 @@
 export default function BigBox({children}) {
     return (
-        <div className={`bigBox`}>
+        <div className={`bigBox border-4 border-gray-400`}>
             { children }
         <style jsx>{`
             .bigBox {
                 display: flex;
-                border: 4px rgba(14, 14, 10, 0.15) solid;
                 margin: 5%;
                 width: 85%;
                 height: 75%;

@@ -9,8 +9,9 @@ export default function MainPage({ children, home }) {
   const [tabStatus, setTabStatus] = useState("anonymous");
 
   return (
-    <div className="absolute justify-center w-5/6 h-4/6 left-20 top-20 flex flex-col rounded-3xl shadow-xl border-4 border-gray-400">
-      <div className="flex flex-col w-full px-20 h-2/3  relative rounded-3xl">
+    <div className="flex absolute w-full h-full">
+    <div className="relative justify-center w-full h-3/5 mx-40 my-40 flex flex-col rounded-3xl shadow-xl border-4 border-gray-400">
+      <div className="flex flex-col w-full h-3/5 px-20 relative rounded-3xl">
         <div className="flex h-1/6 flex-row">
           <span
             className={`flex justify-center w-1/2 text-xl items-center rounded-xl  ${tabStatus === "anonymous" ? "active" : "nonactive"}`}
@@ -72,6 +73,7 @@ export default function MainPage({ children, home }) {
           }
         `}
       </style>
+    </div>
     </div>
   );
 }

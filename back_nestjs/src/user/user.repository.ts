@@ -10,15 +10,18 @@ export class UserRepository {
 
     findByNickname(name: string) {
         const found = this.array.find((element: User) => element.nickname === name);
-        return found;
+        let ret = {...found};
+        return ret;
     }
 
     addUser(nickname: string, password :string) {
         let tmp = new User();
         tmp.id = this.id_count++;
         tmp.nickname = nickname;
+        tmp.password = password
         this.array.push(tmp);
-        console.log(tmp);
-        return "201";
+        let ret = { ...tmp} 
+        console.log(ret);
+        return ret;
     }
 }

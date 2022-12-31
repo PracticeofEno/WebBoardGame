@@ -8,10 +8,10 @@ export class GameController {
     ){}
 
     
-    @Get('/')
-    login(@Query("nickname") nickname: string, @Query("password") password :string) {
-        let ret = this.userService.login(nickname, password);
-        console.log(ret);
-        return ret;
-    }
+    // @Get('/')
+    // login(@Query("nickname") nickname: string, @Query("password") password :string) {
+    //     let ret = this.userService.login(nickname, password);
+    //     console.log(ret);
+    //     return ret;
+    // }
 }

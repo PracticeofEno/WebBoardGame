@@ -20,7 +20,7 @@ export class GameGateWay {
     wsClients = [];
 
     async handleConnection(@ConnectedSocket() client) {
-      console.log(client);
+      console.log("connected");
       // let user_id = await this.getUserId(client);
       // let user = await this.userService.getUserById(user_id);
       // console.log("chat join user : " + user.nickname);

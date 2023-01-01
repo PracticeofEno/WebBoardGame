@@ -1,5 +1,11 @@
-import { ConnectedSocket, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { Server } from "http";
+import {
+  ConnectedSocket,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
+import { Server, Socket } from "socket.io";
+
+let clientMap = new Map<string, Socket>();
 
 @WebSocketGateway({
     cors: {
@@ -20,7 +26,9 @@ export class GameGateWay {
     wsClients = [];
 
     async handleConnection(@ConnectedSocket() client) {
+      //clientMap.set(client.id, client);
       console.log("connected");
+      client.emit("kk", "AA");
       // let user_id = await this.getUserId(client);
       // let user = await this.userService.getUserById(user_id);
       // console.log("chat join user : " + user.nickname);

@@ -25,9 +25,9 @@ export class GameGateWay {
 
     wsClients = [];
 
-    async handleConnection(@ConnectedSocket() client) {
+    async handleConnection(@ConnectedSocket() client :Socket) {
       //clientMap.set(client.id, client);
-      console.log("connected");
+      console.log(client);
       client.emit("kk", "AA");
       // let user_id = await this.getUserId(client);
       // let user = await this.userService.getUserById(user_id);

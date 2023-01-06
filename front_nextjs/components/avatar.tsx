@@ -2,12 +2,12 @@ import { useState } from "react";
 import Image from "next/image";
 
 export default function homeAvatar() {
-  const [avatar, setAvatar] = useState("/api/images/avatar/1");
+  const [avatar, setAvatar] = useState("/images/avatar/1");
 
   function handleAvatarRefresh() {
     let tmp = Math.floor(Math.random() * 45) + 1;
     let newAvatar;
-    newAvatar = avatar.substring(0, 19);
+    newAvatar = avatar.substring(0, 15);
     newAvatar = newAvatar + tmp;
     setAvatar(newAvatar);
   }

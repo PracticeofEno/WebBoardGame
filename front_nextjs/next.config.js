@@ -4,9 +4,15 @@ const rewrites = async () => {
   return [
     {
       source: "/api/:path*",
-      destination: "http://localhost:5050/:path*"
+      destination: "http://localhost:5050/:path*",
     },
   ];
 };
 
-module.exports = { rewrites };
+module.exports = {
+  images: {
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
+  rewrites,
+};

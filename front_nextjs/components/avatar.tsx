@@ -2,30 +2,31 @@ import { useState } from "react";
 import Image from "next/image";
 
 export default function homeAvatar() {
-    const [avatar, setAvatar] = useState("/images/avatar/1.svg");
+  const [avatar, setAvatar] = useState("/api/images/avatar/1");
 
-    function handleAvatarRefresh() {
-        let tmp = Math.floor(Math.random() * 45) + 1;
-        let newAvatar;
-        newAvatar = avatar.substring(0, 15);
-        newAvatar = newAvatar + tmp + ".svg";
-        setAvatar(newAvatar);
-    }
-    return (
-        <div className={`avatar`}>
-          <Image
-            src={avatar}
-            alt="Picture of the author"
-            fill={true}
-            sizes="100vw, 50vw,33vw"
-            priority={true}
-            className={`avatarImg`}
-          />
-          <button
-            onClick={handleAvatarRefresh}
-            className={`avatarRefresh`}
-          ></button>
-        <style jsx>
+  function handleAvatarRefresh() {
+    let tmp = Math.floor(Math.random() * 45) + 1;
+    let newAvatar;
+    newAvatar = avatar.substring(0, 19);
+    newAvatar = newAvatar + tmp;
+    setAvatar(newAvatar);
+  }
+
+  return (
+    <div className={`avatar`}>
+      <Image
+        src={avatar}
+        alt="Picture of the author"
+        fill={true}
+        sizes="100vw, 50vw,33vw"
+        priority={true}
+        className={`avatarImg`}
+      />
+      <button
+        onClick={handleAvatarRefresh}
+        className={`avatarRefresh`}
+      ></button>
+      <style jsx>
         {`
           .avatar {
             disflay: flex;
@@ -59,6 +60,6 @@ export default function homeAvatar() {
           }
         `}
       </style>
-        </div>
-    )
+    </div>
+  );
 }

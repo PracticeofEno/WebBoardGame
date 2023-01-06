@@ -11,8 +11,8 @@ export default function Lobby() {
     const socket = io.connect("http://localhost:5050/game");
 
     // log socket connection
-    socket.on("connect", () => {
-      console.log("SOCKET CONNECTED!", socket.id);
+    socket.on("connect", () => { 
+      console.log("SOCKET CONNECTED!", socket.id);  
     });
 
     // socket disconnet onUnmount if exists

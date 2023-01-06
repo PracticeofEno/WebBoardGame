@@ -1,19 +1,10 @@
 import { useState } from "react";
 import HomeAvatar from "./avatar";
-import {Login} from "../pages/user"
+import { Login } from "../pages/user";
 
 export default function TabData() {
   const [nickname, setNickname] = useState("");
-  const [avatar, setAvatar] = useState("/images/avatar/1.svg");
-
-  function handleAvatarRefresh() {
-    let tmp = Math.floor(Math.random() * 45) + 1;
-    let newAvatar;
-    newAvatar = avatar.substring(0, 15);
-    newAvatar = newAvatar + tmp + ".svg";
-    setAvatar(newAvatar);
-  }
-
+  
   async function login() {
     let tmp = await Login(nickname, "");
     console.log(tmp);
@@ -21,26 +12,44 @@ export default function TabData() {
 
   return (
     <div className={`data`}>
-      <div style={{height:'70%'}}>
-      <div className={`infoSection`}>
-        <div style={{display:'block', width:'35%', height:'100%', position:'relative'}}>
-            <HomeAvatar/>
+      <div style={{ height: "70%" }}>
+        <div className={`infoSection`}>
+          <div
+            style={{
+              display: "block",
+              width: "35%",
+              height: "100%",
+              position: "relative",
+            }}
+          >
+            <HomeAvatar />
+          </div>
+          <span className={`nicknameSpan`}>
+            <h5 className={`nicknameText`}> 캐릭터와 닉네임을 선택</h5>
+            <input
+              onChange={(e) => setNickname(e.target.value)}
+              className={`inputText`}
+              type="text"
+              placeholder="123"
+              maxLength={20}
+              value={nickname}
+            ></input>
+          </span>
         </div>
-        <span className={`nicknameSpan`}>
-          <h5 className={`nicknameText`}> 캐릭터와 닉네임을 선택</h5>
-          <input
-            onChange={(e) => setNickname(e.target.value)}
-            className={`inputText`}
-            type="text"
-            placeholder="123"
-            maxLength={20}
-            value={nickname}
-          ></input>
-        </span>
       </div>
-      </div>
-      <div style={{height: '25%', borderStyle:'solid none none', borderTop:'solid', borderColor:'white', borderWidth: '1px' }}>
-        <button onClick={login} className={`loginButton border-2 border-white-400`}>
+      <div
+        style={{
+          height: "25%",
+          borderStyle: "solid none none",
+          borderTop: "solid",
+          borderColor: "white",
+          borderWidth: "1px",
+        }}
+      >
+        <button
+          onClick={login}
+          className={`loginButton border-2 border-white-400`}
+        >
           <i></i>
           <strong>시작하기</strong>
         </button>

@@ -1,12 +1,8 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css';
-import MainPage from '../components/layout'
-import io from "socket.io-client";
-import { useState, useEffect, useRef } from "react";
+import HomeView from '../components/home/home'
 
 export default function Home() {
   return (
-    <MainPage>
-    </MainPage>
+    <HomeView>
+    </HomeView>
   )
 }

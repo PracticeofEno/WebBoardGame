@@ -9,7 +9,7 @@ export default function MainPage({ children, home }) {
   const [tabStatus, setTabStatus] = useState("anonymous");
 
   return (
-    <div className="flex absolute w-full h-full">
+    <div className="flex absolute w-full h-full bg-alssu_theme bg-opacity-20 bg-no-repeat bg-center bg-cover">
     <div className="relative justify-center w-full h-3/5 mx-40 my-40 flex flex-col rounded-3xl shadow-xl border-4 border-gray-400">
       <div className="flex flex-col w-full h-3/5 px-20 relative rounded-3xl">
         <div className="flex h-1/6 flex-row">
@@ -34,7 +34,7 @@ export default function MainPage({ children, home }) {
         {`
           .active {
             border-width: 2px;
-            background-color: rgba(80, 24, 81, 0.25);
+            background-color: rgba(80, 24, 81, 0.8);
             color: rgb(92, 255, 182);
             text-shadow: rgb(23, 5, 87) 3px 0px 0px,
               rgb(23, 5, 87) 2.83487px 0.981584px 0px,
@@ -64,8 +64,8 @@ export default function MainPage({ children, home }) {
             align-items: center;
             font-family: Black;
             font-size: 19px;
-            background-color: rgba(159, 133, 160, 0.25);
-            color: rgba(255, 255, 255, 0.7);
+            background-color: rgba(159, 133, 160, 0.8);
+            color: rgba(255, 255, 255, 0.8);
             text-align: center;
             cursor: pointer;
             position: relative;

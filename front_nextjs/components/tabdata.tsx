@@ -57,7 +57,7 @@ export default function TabData() {
       <style jsx>
         {`
           .data {
-            background-color: rgba(80, 24, 81, 0.25);
+            background-color: rgba(80, 24, 81, 0.8);
             flex: 110%
             display: flex;
             height: 100%;
@@ -101,8 +101,8 @@ export default function TabData() {
           .inputText {
             height: 46px;
             display: block;
-            background-color: rgba(255, 255, 255, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.7);
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.8);
             border-radius: 7px;
             font-family: Bold;
             font-size: 28px;

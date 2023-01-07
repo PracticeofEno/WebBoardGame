@@ -7,7 +7,7 @@ const rewrites = async () => {
       destination: "http://localhost:5050/:path*",
     },
     {
-      source: "/images/:path*",
+      source: "/image/:path*",
       destination: "http://localhost:5050/images/:path*",
     }
   ];

@@ -1,4 +1,12 @@
 
+@font-face {
+  font-family: 'alssu';
+  src: url('./../public//font//alssu.woff') format('woff');
+  src: url('./../public//font//alssu.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html, body {
   width: 100%;
   height: 100%;

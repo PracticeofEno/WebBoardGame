@@ -6,25 +6,46 @@ import { useState, useEffect, useRef } from "react";
 import Card from "./../components/game/card/Card";
 
 let tmp = [
-{
+  {
     id: '1',
     name: "여우",
-    src: "/images/card_template.svg",
-    detail: "얼쑤얼쑤 다음줄도 한번 보자 근데 좀 작네 이건",
+    src: "/images/fox.svg",
+    detail: "토끼와 곶감을 이김",
  },
+ {
+  id: '2',
+  name: "토끼",
+  src: "/images/rabbit.svg",
+  detail: "곶감을 이김",
+},
+{
+  id: '3',
+  name: "호랑이",
+  src: "/images/tiger.svg",
+  detail: "토끼,여우를 이김",
+},
+{
+  id: '4',
+  name: "곶감",
+  src: "/images/gam.svg",
+  detail: "호랑이를 이김",
+},
 ];
+
+
 
 export default function Tmp() {
   const [cards, setCards] = useState([]);
+  let k = 0;
 
   useEffect(() => {
     setCards(tmp);
   });
 
   return (
-    <div className={`flex absolute w-full h-full flex-col`}>
-      <div className={`w-40 h-40`}>
-        <Card key={`${tmp[0].id}`} name={`${tmp[0].name}`} src={`${tmp[0].src}`} detail={`${tmp[0].detail}`}/>
+    <div className={`flex relative w-full h-full flex-col`}>
+      <div className={`flex relative w-[9rem] h-[13rem] justify-center`}>
+        <Card key={`${tmp[k].id}`} name={`${tmp[k].name}`} src={`${tmp[k].src}`} detail={`${tmp[k].detail}`}/>
       </div>
     </div>
   );

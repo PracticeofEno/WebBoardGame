@@ -7,17 +7,20 @@ import { AuthService } from './auth/auth.service';
 import { UserService } from './user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ImagesModule } from './images/images.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeORMConfig } from './configs/typeorm.config';
 
 @Module({
   imports: [
-    UserModule, 
-    GameModule, 
-    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    UserModule, 
+    GameModule, 
+    AuthModule,
+    TypeOrmModule.forRoot(typeORMConfig),
     ImagesModule
   ],
-  providers: [AuthService, UserService, JwtService]
+  providers: []
 })
 export class AppModule {}

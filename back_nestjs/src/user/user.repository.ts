@@ -1,27 +1,31 @@
-import { User } from '../entity/user.entityt2'
-export class UserRepository {
-    private array: User[] = new Array();
-    id_count = 0;
+import { NotFoundException, HttpException } from "@nestjs/common";
+import { CustomRepository } from "../configs/typeorm-ex.decorator";
+import { Repository } from "typeorm";
+import { User } from "../entity/user.entity"
+import * as bcrypt from "bcrypt";
 
-    constructor(
+@CustomRepository(User)
+export class UserRepository extends Repository<User> {
 
-    ) { }
-    
-
-    findByNickname(name: string) {
-        const found = this.array.find((element: User) => element.nickname === name);
-        let ret = {...found};
-        return ret;
+    async findByNickname(nickname: string) : Promise<User> {
+        const found = await this.findOne({
+            where: {
+                nickname: nickname,
+            },
+        })
+        return found;
     }
 
-    addUser(nickname: string, password :string) {
-        let tmp = new User();
-        tmp.id = this.id_count++;
-        tmp.nickname = nickname;
-        tmp.password = password
-        this.array.push(tmp);
-        let ret = { ...tmp} 
-        console.log(ret);
-        return ret;
+    async addUser(nickname:string, password:string) : Promise<User>{
+        const salt = await bcrypt.genSalt();
+        const hash = await bcrypt.hash(password, salt);
+        let user = new User();
+        user.nickname = nickname;
+        user.password = password;
+        user.win = 0; 
+        user.lose = 0;
+        user.status = 0;
+        await this.save(user);
+        return user;
     }
 }

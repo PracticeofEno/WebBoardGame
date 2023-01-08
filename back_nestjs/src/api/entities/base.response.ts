@@ -1,9 +1,9 @@
 import { ApiProperty} from '@nestjs/swagger'
 
-export abstract class BaseResponse {
+export abstract class PostAddUser {
     @ApiProperty()
-    public code: number;
+    nickname: string;
 
     @ApiProperty()
-    message: string;
+    password: string;
 }

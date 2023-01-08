@@ -1,9 +1,11 @@
 import { Controller, Get, UseGuards, Request, Param } from '@nestjs/common';
-import { Query } from '@nestjs/common/decorators';
+import { Body, Post, Query } from '@nestjs/common/decorators';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiCreatedResponse, ApiBody } from '@nestjs/swagger';
+import { PostAddUser } from 'src/api/entities/base.response';
+import { UserService } from 'src/user/user.service';
 
 @Controller('auth')
 @ApiTags('Auth API')
@@ -31,5 +33,13 @@ export class AuthController {
     return jwt;
   }
 
-  async login(user: any) {}
+  @Post('/login')
+  @ApiBody({
+    type: PostAddUser
+  })
+  @ApiOperation({ summary: '로그인', description: '성공시 유저id를 가진 jwt 반납' })
+  @ApiCreatedResponse({ description: 'JWT 토큰', type: String})
+  async login(@Body('nickname') nickname, @Body('password') password) {
+    return await this.authService.login(nickname, password);
+  }
 }

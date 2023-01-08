@@ -7,12 +7,13 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'alssu_theme': "url('/images/home.svg')",
-      }
+        alssu_theme: "url('/images/home.svg')",
+        card_template: "url('/images/card_template.svg')",
+      },
     },
     fontFamily: {
-      'alssu': ['alssu'],
+      alssu: ["alssu"],
     },
   },
   plugins: [],
-}
+};

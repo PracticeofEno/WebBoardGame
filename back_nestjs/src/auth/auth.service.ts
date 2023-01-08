@@ -2,28 +2,35 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
+import * as bcrypt from "bcrypt";
+import { User } from 'src/entity/user.entity';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private usersService: UserService,
+        private userService: UserService,
         private jwtService: JwtService
     ) { }
 
-    async validateUser(username: string, pass: string): Promise<any> {
-        const user = await this.usersService.findOne(username);
-        if (user && user.password === pass) {
-            const { password, ...result } = user;
-            return result;
+    async validateUser(nickname: string, pass: string): Promise<User> {
+        const user = await this.userService.findByNickname(nickname);
+        let compare = await bcrypt.compare(pass, user.password);
+        if (user && compare) {
+            return user;
         }
         return null;
     }
 
-    async login(user: any) {
-        const payload = { username: user.username, sub: user.userId };
-        return {
-            access_token: this.jwtService.sign(payload),
-        };
+    async login(nickname: string, password: string) : Promise<string>{
+        let user = await this.validateUser(nickname, password);
+        if (user) {
+            let payload = { id : user.id };
+            const jwt = await this.jwtService.sign(payload);
+            return jwt;
+        }
+        else {
+            throw new HttpException("인증 실패", 401);
+        }
     }
 
     

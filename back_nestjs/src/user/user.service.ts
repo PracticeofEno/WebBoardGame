@@ -1,37 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/entity/user.entity';
 import { UserRepository } from './user.repository';
 
-export type User = any;
 
 @Injectable()
 export class UserService {
-    private userRepository : UserRepository = new UserRepository();
-
-    private readonly users = [
-        {
-          userId: 1,
-          username: 'john',
-          password: 'changeme',
-        },
-        {
-          userId: 2,
-          username: 'maria',
-          password: 'guess',
-        },
-      ];
-
     constructor(
-    ) {}
+      @InjectRepository(UserRepository)
+      private userRepository: UserRepository
+    ){}
 
-    async findOne(username: string): Promise<User | undefined> {
-        return this.users.find(user => user.username === username);
-      }
-
-    login(nickname: string, password :string) {
-        return this.userRepository.findByNickname(nickname);
+    async findByNickname(nickname: string) : Promise<User>{
+      const found = await this.userRepository.findByNickname(nickname);
+      if (!found)
+        throw new HttpException("Not exist Nickname", 400);
+      return found
     }
 
-    addUser(nickname: string, password :string) {
-        return this.userRepository.addUser(nickname, password);
+    async addUser(nickname:string, password:string) : Promise<User> {
+      const found = await this.userRepository.findByNickname(nickname);
+      if (found)
+        throw new HttpException("Duplicate Nickname", 400);
+      return await this.userRepository.addUser(nickname, password);
     }
 }

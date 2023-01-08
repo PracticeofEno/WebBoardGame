@@ -7,9 +7,12 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        alssu_theme: "url('/images/home.svg')",
-        button_theme: "url('/images/button_background.webp')",
-        card_template: "url('/images/card_template.svg')",
+        'alssu_theme': "url('/images/home.svg')",
+        'card_template': "url('/images/card_template.svg')",
+        'fox': "url('/images/fox.svg')",
+        'tiger': "url('/images/tiger.svg')",
+        'rabbit': "url('/images/rabbit.svg')",
+        'gam': "url('/images/gam.svg')",
       },
     },
     fontFamily: {

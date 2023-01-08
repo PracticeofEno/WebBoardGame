@@ -7,9 +7,12 @@
   },
   "dependencies": {
     "@types/socket.io-client": "^3.0.0",
+    "axios": "^1.2.2",
     "clsx": "^1.2.1",
     "lint": "^0.8.19",
     "next": "latest",
+    "next-auth": "^4.18.8",
+    "query-string": "^8.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },

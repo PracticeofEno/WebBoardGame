@@ -36,7 +36,7 @@ let tmp = [
 
 export default function Tmp() {
   const [cards, setCards] = useState([]);
-  let k = 0;
+  let k = 3;
 
   useEffect(() => {
     setCards(tmp);

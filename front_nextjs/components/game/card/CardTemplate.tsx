@@ -9,9 +9,16 @@ export default function CardTemplate({ name, src, detail }) {
           <div className="w-[1.5rem]"></div>
           <div className="w-[3rem] text-center text-xs font-['alssu']"> {name} </div>
         </div>
-        <div className="flex w-full h-[9.5rem] flex-row">
+        <div className="relative w-full h-[9.5rem] flex-row">
           <div className="w-[2rem] h-[9.5rem]"></div>
-          <div className="flex w-[8rem] h-[9.5rem] bg-fox bg-no-repeat bg-center bg-contain">
+          <div className={`flex w-[8rem] h-[9.5rem]`}>
+            <Image
+              src={src}
+              alt="Picture of the author"
+              fill={true}
+              sizes="100vw, 50vw,33vw"
+              priority={true}
+            />
           </div>
           <div className="w-[2rem] h-[9.5rem]"></div>
         </div>

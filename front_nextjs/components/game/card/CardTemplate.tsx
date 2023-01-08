@@ -9,7 +9,12 @@ export default function CardTemplate({ name, src, detail }) {
           <div className="w-[1.5rem]"></div>
           <div className="w-[3rem] text-center text-xs font-['alssu']"> {name} </div>
         </div>
-        <div className="flex w-full h-[9.5rem] flex-row"></div>
+        <div className="flex w-full h-[9.5rem] flex-row">
+          <div className="w-[2rem] h-[9.5rem]"></div>
+          <div className="flex w-[8rem] h-[9.5rem] bg-fox bg-no-repeat bg-center bg-contain">
+          </div>
+          <div className="w-[2rem] h-[9.5rem]"></div>
+        </div>
         <div className="flex w-full h-[4rem] flex-row">
           <div className="w-[2.5rem] h-[4rem] "></div>
           <div className="flex w-[7rem] h-[4rem] leading-[4rem] text-center text-base font-['alssu']">{detail}</div>

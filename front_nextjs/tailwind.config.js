@@ -9,6 +9,7 @@ module.exports = {
       backgroundImage: {
         alssu_theme: "url('/images/home.svg')",
         card_template: "url('/images/card_template.svg')",
+        fox: "url('/images/fox.svg')",
       },
     },
     fontFamily: {

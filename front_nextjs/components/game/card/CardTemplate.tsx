@@ -24,7 +24,7 @@ export default function CardTemplate({ name, src, detail }) {
         </div>
         <div className="flex w-full h-[4rem] flex-row">
           <div className="w-[2.5rem] h-[4rem] "></div>
-          <div className="flex w-[7rem] h-[4rem] leading-[4rem] text-center text-base font-['alssu']">{detail}</div>
+          <div className="flex w-[7rem] h-[4rem] leading-[4rem] justify-center items-center text-center text-base font-['alssu']">{detail}</div>
           <div className="w-[2.5rem] h-[4rem] "></div>
         </div>
       </div>

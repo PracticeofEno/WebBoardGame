@@ -43,8 +43,8 @@ export default function Tmp() {
   });
 
   return (
-    <div className={`flex relative w-full h-full flex-col`}>
-      <div className={`flex relative w-[9rem] h-[13rem] justify-center`}>
+    <div className={`flex absolute w-full h-full flex-col`}>
+      <div className={`flex relative w-[12rem] h-[17.4rem] bg-gray-400 justify-center`}>
         <Card key={`${tmp[k].id}`} name={`${tmp[k].name}`} src={`${tmp[k].src}`} detail={`${tmp[k].detail}`}/>
       </div>
     </div>

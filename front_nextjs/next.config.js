@@ -4,11 +4,11 @@ const rewrites = async () => {
   return [
     {
       source: "/api/:path*",
-      destination: "http://localhost:5050/:path*",
+      destination: "http://localhost:5000/:path*",
     },
     {
       source: "/image/:path*",
-      destination: "http://localhost:5050/images/:path*",
+      destination: "http://localhost:5000/images/:path*",
     }
   ];
 };

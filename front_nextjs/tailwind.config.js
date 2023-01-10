@@ -7,6 +7,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
+        'back2': "url('/images/back2.svg')",
         'alssu_theme': "url('/images/home.svg')",
         'card_template': "url('/images/card_template.svg')",
         'fox': "url('/images/fox.svg')",

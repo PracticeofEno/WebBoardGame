@@ -16,12 +16,22 @@ export class UserRepository extends Repository<User> {
         return found;
     }
 
+    async findByEmail(email: string) : Promise<User>{
+        const found = await this.findOne({
+            where: {
+                email: email,
+            },
+        })
+        return found;
+      }
+
     async addUser(nickname:string, password:string) : Promise<User>{
         const salt = await bcrypt.genSalt();
         const hash = await bcrypt.hash(password, salt);
         let user = new User();
         user.nickname = nickname;
-        user.password = password;
+        user.password = hash;
+        user.email = nickname;
         user.win = 0; 
         user.lose = 0;
         user.status = 0;

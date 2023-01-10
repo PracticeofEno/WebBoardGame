@@ -18,6 +18,13 @@ export class UserService {
       return found
     }
 
+    async findByEmail(email: string) : Promise<User>{
+      const found = await this.userRepository.findByEmail(email);
+      if (!found)
+        throw new HttpException("Not exist Nickname", 400);
+      return found
+    }
+
     async addUser(nickname:string, password:string) : Promise<User> {
       const found = await this.userRepository.findByNickname(nickname);
       if (found)

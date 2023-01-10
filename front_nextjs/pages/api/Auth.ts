@@ -1,12 +1,11 @@
 import axios, { type AxiosResponse } from "axios";
 
-export async function getUserByEmail() {
-    // const response = await axios.get("/api/users", {
-    //     headers: {
-    //         Authorization: `Bearer ` + cookies.get("jwt"),
-    //     },
-    // });
-    const response = await axios.get("/api/users", {
-    });
+export async function login(nickname: string, password: string) {
+    const response = await axios.post("/api/auth/login",
+        {
+          nickname: nickname,
+          password: password
+        },
+      );
     return response.data;  
 }

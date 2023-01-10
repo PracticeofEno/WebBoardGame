@@ -44,8 +44,12 @@ export default function Tmp() {
 
   return (
     <div className={`flex absolute w-full h-full flex-col`}>
-      <div className={`flex relative w-[12rem] h-[17.4rem] bg-gray-400 justify-center`}>
-        <Card key={`${tmp[k].id}`} name={`${tmp[k].name}`} src={`${tmp[k].src}`} detail={`${tmp[k].detail}`}/>
+      <div className={`flex relative w-full h-[17.4rem] bg-gray-400 justify-center`}>
+        {
+          tmp.map(value => {
+            return <Card key={`${value.id}`} name={`${value.name}`} src={`${value.src}`} detail={`${value.detail}`}/>
+          })
+        }
       </div>
     </div>
   );

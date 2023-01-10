@@ -1,12 +1,11 @@
 import axios, { type AxiosResponse } from "axios";
 
-export async function addUser() {
-    // const response = await axios.get("/api/users", {
-    //     headers: {
-    //         Authorization: `Bearer ` + cookies.get("jwt"),
-    //     },
-    // });
-    const response = await axios.get("/api/users", {
-    });
+export async function addUser(nickname: string, password: string) {
+    const response = await axios.post("/api/user/",
+        {
+          nickname: nickname,
+          password: password
+        },
+      );
     return response.data;  
 }

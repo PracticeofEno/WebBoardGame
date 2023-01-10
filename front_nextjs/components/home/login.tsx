@@ -1,15 +1,34 @@
 import Image from "next/image";
-import { useState } from "react";
-import Avatar from "../avatar"
+import { useState} from "react";
+import Avatar from "../avatar";
+import {addUser} from "../../pages/api/User";
+import { login } from "../../pages/api/Auth";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 export default function LoginUI() {
   const [nickname, setNickname] = useState("");
+  const [password, setPassword] = useState("");
   const [tabStatus, setTabStatus] = useState("anonymous");
+  const router = useRouter()
+
+  async function apiAddUser() {
+    let res = await addUser(nickname, password);
+    Cookies.set('jwt', res);
+    router.push("/test");
+  }
+
+  async function apiLogin() {
+    let res = await login(nickname, password);
+    Cookies.set('jwt', res);
+    router.push("/test");
+  }
 
   return (
     <div className="flex justify-evenly flex-col w-[50rem] h-[50rem]">
       <input
         type="text"
+        onChange={(e) => setNickname(e.target.value)}
         className="h-24 border text-5xl px-4 placeholder:font-alssu"
         placeholder={"이름"}
       >
@@ -17,17 +36,18 @@ export default function LoginUI() {
         
       <input
         type="text"
+        onChange={(e) => setPassword(e.target.value)}
         className="h-24 border text-5xl px-4 placeholder:font-alssu "
         placeholder={"암호"}
       >
       </input>
 
       <div className="flex justify-between items-center h-24 space-x-0">
-          <button className="button w-2/5 h-full rounded-2xl">
+          <button onClick={apiLogin} className="button w-2/5 h-full rounded-2xl">
             입장
           </button>
 
-          <button className="button w-2/5 h-full rounded-2xl">
+          <button onClick={apiAddUser} className="button w-2/5 h-full rounded-2xl">
             회원 가입
           </button>
       </div>
@@ -47,7 +67,6 @@ export default function LoginUI() {
           letter-spacing: 0.4rem;
           font-weight: 500;
           color: #000;
-          background-image: url('/images/button_background.png');
           background-repeat: no-repeat;
           background-size: cover;
           background-position: center;

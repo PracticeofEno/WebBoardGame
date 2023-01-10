@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "next.config.js", "next.config.js"  ],
+, "next.config.js", "next.config.js", "pages/test.js", "pages/test.js"  ],
   "exclude": [
     "node_modules"
   ]

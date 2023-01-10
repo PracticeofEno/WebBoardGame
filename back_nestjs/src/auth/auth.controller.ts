@@ -7,6 +7,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiCreatedResponse, ApiBo
 import { PostAddUser } from 'src/api/entities/base.response';
 import { UserService } from 'src/user/user.service';
 
+
 @Controller('auth')
 @ApiTags('Auth API')
 export class AuthController {
@@ -41,5 +42,16 @@ export class AuthController {
   @ApiCreatedResponse({ description: 'JWT 토큰', type: String})
   async login(@Body('nickname') nickname, @Body('password') password) {
     return await this.authService.login(nickname, password);
+  }
+
+  @Post('/oauth-login')
+  @ApiBody({
+    type: String,
+    required: true,
+  })
+  @ApiOperation({ summary: '구글 로그인', description: 'access_token을 받아서 유효한 토큰이면 email을 id로 가진 jwt 반납' })
+  @ApiCreatedResponse({ description: 'JWT 토큰', type: String})
+  async oauthLogin(@Body('access') access) {
+    return await this.authService.oauthLogin(access);
   }
 }

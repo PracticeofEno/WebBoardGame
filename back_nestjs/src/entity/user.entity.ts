@@ -9,6 +9,10 @@ export class User extends BaseEntity {
 
   @Column()
   @ApiProperty()
+  email: string;
+
+  @Column()
+  @ApiProperty()
   nickname: string;
 
   @Column({ nullable: true })

@@ -13,15 +13,19 @@ export class GameData {
         this.players.push(new Player());
         this.turn = 0;
         this.sockets = new Array<Socket>();
+		this.host = null;
+		this.roomState = 0;
     }
 
-    room: string
-    sockets: Socket[]
+    room: string;
+    sockets: Socket[];
     turn: number;
     gamAdventage: number;
     wait: number;
     max: number;
     players: Player[];
+	host: Socket;
+	roomState: number;
 
     printfServerData() {
         console.log(this);

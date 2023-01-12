@@ -91,10 +91,28 @@ export class GameGateWay implements OnGatewayConnection, OnGatewayDisconnect {
 	}
 
 	@SubscribeMessage("submit_card")
-	async submit_card(@ConnectedSocket() client, @MessageBody("kind") kind, @MessageBody('count') count) {
+	async submit_card(@ConnectedSocket() client, @MessageBody("kind") kind) {
 		let jwt = await this.checkValid(client);
 		try {
-			this.gameService.submitCard(jwt["room"], client, {kind: kind, count: count});
+			this.gameService.submitCard(jwt["room"], client, kind);
+		}
+		catch {}
+	}
+
+	@SubscribeMessage("submit_token")
+	async submit_token(@ConnectedSocket() client, @MessageBody('count') count) {
+		let jwt = await this.checkValid(client);
+		try {
+			this.gameService.submitToken(jwt["room"], client, count);
+		}
+		catch {}
+	}
+
+	@SubscribeMessage("submit_choice")
+	async submit_choice(@ConnectedSocket() client, @MessageBody("choice") choice) {
+		let jwt = await this.checkValid(client);
+		try {
+			this.gameService.submitChoice(jwt["room"], client, choice);
 		}
 		catch {}
 	}

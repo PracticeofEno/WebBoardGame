@@ -15,5 +15,5 @@ export enum GAME_STATE{
 	FIRST_MONEY_SELECT,       // 후턴 플레이어 카드 제출 단계
 	SECOND_CARD_SELECT,     // 후턴 플레이어 선택 단계 (승부 포기 따당)
 	SECOND_CHOICE,
-	THRID_CARD_SELECT       // 따당시
+	THIRD_CHOICE_SELECT       // 따당시
 }

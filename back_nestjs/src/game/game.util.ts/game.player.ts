@@ -16,6 +16,9 @@ export class Player {
     five: number;
     ten: number;
 	socket: Socket;
+	token: number;
+	submit_card: number;
+
     
     constructor() {
         this.tiger = 1;
@@ -26,6 +29,7 @@ export class Player {
         this.one = 10;
         this.five = 5;
         this.ten = 3;
+		this.token = 50;
     }
 
 	isCardEmpty() : Boolean {
@@ -35,28 +39,31 @@ export class Player {
 	}
 
 	isTokenEmpty() : Boolean {
-		if ((this.one + this.five + this.ten) <= 0)
+		if (this.token <= 0)
 			return true;
 		return false;
 	}
 
-	isValid(kind: string, count: number = 1) : Boolean{
+	setCard(kind: string) : Boolean{
 		let myCount = this["" + kind];
-		if (myCount >= count) {
+		if (myCount == 0) {
+			return false;
+		}
+		else {
+			this["" + kind] = myCount - 1;
+		}
+		return true;
+	}
+
+	decreaseToken(count: number) : Boolean{
+		if (this.token >= count) {
+			this.token = this.token - count;
 			return true;
 		}
 		return false;
 	}
 
-	decraseValue(kind: string, count: number = 1) : Boolean {
-		let myCount = this["" + kind];
-		if (myCount >= count) {
-			console.log(this["" + kind]);
-			this["" + kind] = myCount - count;
-			console.log(this["" + kind]);
-			return true;
-		}
-		return false;
+	increaseToken(count: number) {
+		this.token = this.token + count;
 	}
-
 }

@@ -23,16 +23,21 @@ export class GameService {
 	joinRoom(room: string, client: Socket) {
 		let room_data: GameData = this.gameRepository.findByRoom(room);
 		room_data.sockets.push(client);
-		this.sendMessage(room_data, "join_user", null)
+		room_data.sendMessage("join_user", null);
 		console.log(room_data.sockets.length);
 		if (room_data.sockets.length == 1) {
-			this.sendMessage(room_data, "host", null);
+			room_data.sendMessage("host", null);
 			room_data.players[0].socket = client;
 			room_data.host = client;
+			client.emit("player", 0);
 		}
 		else if (room_data.sockets.length == 2) {
-			this.sendMessage(room_data, "ready", null);
+			room_data.sendMessage("ready", null);
 			room_data.players[1].socket = client;
+			client.emit("player", 1);
+		}
+		else {
+			client.emit("observer", 1);
 		}
 	}
 
@@ -40,7 +45,7 @@ export class GameService {
 		let room_data = this.gameRepository.leaveRoom(room, client);
 		if (room_data.roomState > GAME_STATE.READY) {
 			if (room_data.players[0].socket.id == client.id) {
-				this.sendMessage(room_data, "end", {
+				room_data.sendMessage("end", {
 					"winner": 1,
 				})
 				//save data
@@ -48,7 +53,7 @@ export class GameService {
 				this.gameRepository.deleteRoom(room_data.room);
 			}
 			else if (room_data.players[1].socket.id == client.id) {
-				this.sendMessage(room_data, "end", {
+				room_data.sendMessage("end", {
 					"winner": 0,
 				})
 				//save data
@@ -58,7 +63,7 @@ export class GameService {
 		}
 
 		if (room_data.sockets.length < 2)
-			this.sendMessage(room_data, "unready", null);
+			room_data.sendMessage("unready", null);
 		if (room_data.sockets.length == 0) {
 			console.log(`destory room ${room_data.room}`);
 			this.gameRepository.deleteRoom(room_data.room);
@@ -80,57 +85,39 @@ export class GameService {
 	}
 
 	//broad cast event
-	sendMessage(room_data: GameData, message_name: string, data: any) {
-		for (let i = 0; i < room_data.sockets.length; i++) {
-			room_data.sockets[i].emit(message_name, data);
-		}
+	sendMessage(room_data: GameData, ) {
+		
 	}
 
 	setStartGame(room: string, client: Socket) {
 		let room_data = this.gameRepository.findByRoom(room);
-		if (room_data.roomState == GAME_STATE.READY && client.id == room_data.host.id) {
-			let turn;
-			let player1_dice = Math.floor((Math.random() * 6) + 1);
-			let player2_dice = Math.floor((Math.random() * 6) + 1);
-			while (player1_dice == player2_dice) {
-				player1_dice = Math.floor((Math.random() * 6) + 1);
-				player2_dice = Math.floor((Math.random() * 6) + 1);
-			}
-			console.log(`dice -> ${player1_dice} vs ${player2_dice}`);
-			if (player1_dice > player2_dice)
-				turn = 0;
-			else
-				turn = 1;
-			this.gameRepository.setTurn(room, turn);
-			console.log(`${room} - turn is ${turn ? "second player" : "first plyaer"}`);
-			this.sendMessage(room_data, "start_game", {
-				player1: player1_dice,
-				player2: player2_dice,
-				turn: `${turn ? 1 : 0}`
-			})
-		}
+		let dice = room_data.Start(client);
+		
 	}
 
-	submitCard(room: string, client: Socket, submit: SubmitCardDto) {
+	submitCard(room: string, client: Socket, kind: string) {
 		let room_data = this.gameRepository.findByRoom(room);
-		if ((room_data.roomState == GAME_STATE.FIRST_CARD_SELECT || room_data.roomState == GAME_STATE.SECOND_CARD_SELECT) 
-			&& room_data.players[room_data.turn].socket.id == client.id) {
-				if (room_data.players[room_data.turn].decraseValue(submit.kind, submit.count)) {
-					if (room_data.roomState == GAME_STATE.FIRST_CARD_SELECT)
-						this.gameRepository.setRoomState(room, GAME_STATE.FIRST_MONEY_SELECT);
-					else if (room_data.roomState == GAME_STATE.SECOND_CARD_SELECT)
-						this.gameRepository.setRoomState(room, GAME_STATE.SECOND_CHOICE)
-				}
-				else {
-				}
-		}
+		room_data.submitCard(client, kind);
 	}
+
+	submitToken(room: string, client: Socket, count: number) {
+		let room_data = this.gameRepository.findByRoom(room);
+		room_data.submitToken(client, count);
+	}
+
+	submitChoice(room: string, client: Socket, choice: string) {
+		let room_data = this.gameRepository.findByRoom(room);
+		room_data.submitChoice(client, choice);
+	}
+
 
 	async tmp() {
 		this.gameRepository.servers.map((value) => {
-			console.log(value.room);
-			console.log(value.sockets.length);
-			value.players[0].decraseValue("fox", 4);
+			console.log(`gameState -> ${value.roomState}`);
+			console.log(`player1 -> ${value.players[0].token}`);
+			console.log(`player2 -> ${value.players[1].token}`);
+			console.log(`player1_token -> ${value.player1_token}`);
+			console.log(`player2_token-> ${value.player2_token}`);
 		})
 	}
 }

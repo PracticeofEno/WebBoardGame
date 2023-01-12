@@ -25,10 +25,10 @@ export default function Tmp() {
   useEffect(() => {
     (async () => {
       const posts = await axios.get(
-        "/api/game/" + queryString.parse(router.asPath)["/test2?c"]
+        "/api/game/" + queryString.parse(router.asPath)["/test_invite?c"]
       );
       Cookies.set("jwt", posts.data);
-      router.push('/test');
+      router.push('/test_lobby');
     })();
   }, []);
 
@@ -39,7 +39,7 @@ export default function Tmp() {
     }
     Cookies.set('jwt', res);
     console.log(Cookies.get('jwt'));
-    router.push('/test');
+    router.push('/test_lobby');
   };
 
   return (

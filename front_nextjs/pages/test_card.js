@@ -3,7 +3,7 @@ import styles from "../styles/Home.module.css";
 import MainPage from "../components/layout";
 import io from "socket.io-client";
 import { useState, useEffect, useRef } from "react";
-import Card from "./../components/game/card/Card";
+import Card from "../components/game/card/Card";
 
 let tmp = [
   {

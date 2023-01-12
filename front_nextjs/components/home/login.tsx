@@ -9,19 +9,20 @@ import { useRouter } from "next/router";
 export default function LoginUI() {
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
-  const [tabStatus, setTabStatus] = useState("anonymous");
-  const router = useRouter()
+  const router = useRouter();
 
   async function apiAddUser() {
     let res = await addUser(nickname, password);
+    console.log(res);
     Cookies.set('jwt', res);
-    router.push("/test");
+    router.push("/test_lobby");
   }
 
   async function apiLogin() {
     let res = await login(nickname, password);
+    console.log(res);
     Cookies.set('jwt', res);
-    router.push("/test");
+    router.push("/test_lobby");
   }
 
   return (

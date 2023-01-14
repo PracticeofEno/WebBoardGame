@@ -1,6 +1,6 @@
 import { useState } from "react";
 import HomeAvatar from "./avatar";
-import { addUser } from "../pages/user";
+import { addUser } from "../pages/api/User";
 
 export default function MemberRender() {
   const [nickname, setNickname] = useState("");

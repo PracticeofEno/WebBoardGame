@@ -1,12 +1,12 @@
 import { useState } from "react";
 import HomeAvatar from "./avatar";
-import { Login } from "../pages/user";
+import { login } from "../pages/api/Auth";
 
 export default function TabData() {
   const [nickname, setNickname] = useState("");
   
-  async function login() {
-    let tmp = await Login(nickname, "");
+  async function login2() {
+    let tmp = await login(nickname, "");
     console.log(tmp);
   }
 
@@ -47,7 +47,7 @@ export default function TabData() {
         }}
       >
         <button
-          onClick={login}
+          onClick={login2}
           className={`loginButton border-2 border-white-400`}
         >
           <i></i>

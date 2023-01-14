@@ -2,9 +2,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function Token({gold}) {
-	const [src2, setSrc2] = useState("");
+	const [src2, setSrc2] = useState("/images/1.svg");
 	useEffect(() => {
-		console.log(gold);
 		if (gold == "1") 
 			setSrc2("/images/1.svg");
 		if (gold == "5") 
@@ -14,13 +13,13 @@ export default function Token({gold}) {
 	});
 	
 	return (
-		<div className="relative w-full h-full">
+		<div className="relative w-full h-full flex-row justify-start">
 			<Image
         		src={src2}
         		alt="Picture of the author"
         		fill={true}
-        		sizes="100vw, 50vw,33vw"
         		priority={true}
+				sizes="100vw, 100vw,100vw"
       		/>
 			<style jsx>{`
 				

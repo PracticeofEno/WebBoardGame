@@ -5,10 +5,6 @@ const rewrites = async () => {
     {
       source: "/api/:path*",
       destination: "http://localhost:5000/:path*",
-    },
-    {
-      source: "/image/:path*",
-      destination: "http://localhost:5000/images/:path*",
     }
   ];
 };

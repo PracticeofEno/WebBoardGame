@@ -31,6 +31,11 @@ let tmp = [
   },
   ];
 
+  const haha = () => {
+	tmp.map(value => {
+		return <Card key={`${value.id}`} name={`${value.name}`} src={`${value.src}`} detail={`${value.detail}`}/>
+	  })
+  }
 
 export default function Grid() {
 	const [player1, setPlayer1] = useState(new Player());
@@ -48,7 +53,20 @@ export default function Grid() {
 	  <div className="e">Battle Tab</div>
 	  <div className="f">Battle Action Tab</div>
       <div className="g">chatting tab</div>
-	  <div className="i">hand Card Tab</div>
+	  <div className="i flex flex-row justify-center items-center">
+		<div className="flex flex-row w-[13rem] h-[16rem]">
+			<Card key={`${tmp[0].id}`} name={`${tmp[0].name}`} src={`${tmp[0].src}`} detail={`${tmp[0].detail}`}/>
+		</div>
+		<div className="flex flex-row w-[13rem] h-[16rem]">
+			<Card key={`${tmp[1].id}`} name={`${tmp[1].name}`} src={`${tmp[1].src}`} detail={`${tmp[1].detail}`}/>
+		</div>
+		<div className="flex flex-row w-[13rem] h-[16rem]">
+			<Card key={`${tmp[2].id}`} name={`${tmp[2].name}`} src={`${tmp[2].src}`} detail={`${tmp[2].detail}`}/>
+		</div>
+		<div className="flex flex-row w-[13rem] h-[16rem]">
+			<Card key={`${tmp[3].id}`} name={`${tmp[3].name}`} src={`${tmp[3].src}`} detail={`${tmp[3].detail}`}/>
+		</div>
+	  </div>
 	  <div className="j">Token Control tab</div>
 	  <div className="l">
 	  	<UserView nickname2="haha" src2="/api/images/avatar/1"/>
@@ -59,7 +77,7 @@ export default function Grid() {
 		  width: 100vw;
 		  height: 100vh;
           grid-template-columns: repeat(10, 1fr);
-          grid-auto-rows: 0.5fr 0.5fr 1.5fr 1.5fr 0.5fr;
+          grid-template-rows: 0.5fr 0.5fr 1.5fr 1fr 0.5fr;
           grid-template-areas:
 		      "b b b b b b b c d d"
 			  "a e e e e e e f g g"
@@ -77,7 +95,9 @@ export default function Grid() {
 		.e { grid-area: e; }
 		.f { grid-area: f; }
 		.g { grid-area: g; }
-		.i { grid-area: i; }
+		.i { 
+			grid-area: i; 
+		}
 		.j { grid-area: j; }
 		.k { grid-area: k; }
 		.l { grid-area: l; }

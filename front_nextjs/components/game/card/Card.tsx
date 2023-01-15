@@ -3,24 +3,24 @@ import Image from "next/image";
 export default function Card({ name, src, detail }) {
   return (
 	<div className="w-full h-full relative">
-		<img src="/images/card_template.svg" alt="" className="w-full h-full"/>
+		<img src="/images/card_template.svg" alt="" className="absolute w-full h-full"/>
 		<img src={src} alt="" className="ImgCharacter"/>
-		<div className="CardTitle">{name}</div>
-      	<div className="CardDetail">{detail}</div>
+		<p className="CardTitle">{name}</p>
+      	<p className="CardDetail">{detail}</p>
 		<style jsx>{`
 			.ImgCharacter {
-				width: 70%;
-  				hight: 70%;
+				width: 65%;
+				height: 65%;
   				position: absolute;
-  				top: 20%;
-  				left: 13%;
+  				top: 8%;
+  				left: 16%;
 			}
 
 			.CardTitle {
-				position: absolute;
+				position: relative;
   				top: 7%;
-  				left: 16%;
-  				font-size: 2.3vw;
+  				left: 22%;
+  				font-size: 1rem;
   				font-weight: 500;
   				font-family: 'alssu';
 			}
@@ -28,8 +28,8 @@ export default function Card({ name, src, detail }) {
 			.CardDetail {
 				position: absolute;
   				bottom: 15%;
-  				left: 17%;
-  				font-size: 1vw;
+  				left: 22%;
+  				font-size: 1rem;
   				font-weight: 300;
   				font-family: 'alssu';
   				text-align: center;

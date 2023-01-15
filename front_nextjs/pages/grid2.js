@@ -14,33 +14,29 @@ export default function Grid() {
       <div className="b">
 		<UserView nickname2="haha" src2="/api/images/avatar/1"/>
 	  </div>
-      <div className="c">
-		<TokenView gold={player2.token}/>
-	  </div>
+	  <div className="c">Token Count</div>
       <div className="d">Navi Var</div>
 	  <div className="e">Battle Tab</div>
-      <div className="f">Control tab</div>
+	  <div className="f">Battle Action Tab</div>
       <div className="g">chatting tab</div>
-	  <div className="h">Grave Card Tab</div>
 	  <div className="i">hand Card Tab</div>
 	  <div className="j">Token Control tab</div>
-	  <div className="k">
-	  	<TokenView gold={player1.token}/>
+	  <div className="l">
+	  	<UserView nickname2="haha" src2="/api/images/avatar/1"/>
 	  </div>
-	  <div className="l">User tab</div>
       <style jsx>{`
         .wrapper {
           display: grid;
 		  width: 100vw;
 		  height: 100vh;
           grid-template-columns: repeat(10, 1fr);
-          grid-auto-rows: 0.5fr 0.5fr 3fr 1fr 1fr;
+          grid-auto-rows: 0.5fr 0.5fr 1.5fr 1.5fr 0.5fr;
           grid-template-areas:
-		      "a a b b b c c c d d d"
-			  "a a b b b c c c g g g"
-			  "e e e e e e f f g g g"
-			  "h h i i i j k k g g g"
-			  "h h l l l j k k g g g"
+		      "b b b b b b b c d d"
+			  "a e e e e e e f g g"
+			  "a e e e e e e f g g"
+			  "i i i i i i i j g g"
+			  "l l l l l l l j g g"
         }
 
 		.a { 
@@ -52,12 +48,14 @@ export default function Grid() {
 		.e { grid-area: e; }
 		.f { grid-area: f; }
 		.g { grid-area: g; }
-		.h { grid-area: h; }
 		.i { grid-area: i; }
 		.j { grid-area: j; }
 		.k { grid-area: k; }
 		.l { grid-area: l; }
 		
+		div {
+			border: 1px solid black;
+		}
       `}</style>
     </div>
   );

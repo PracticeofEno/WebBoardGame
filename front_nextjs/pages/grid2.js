@@ -54,18 +54,14 @@ export default function Grid() {
 	  <div className="f">Battle Action Tab</div>
       <div className="g">chatting tab</div>
 	  <div className="i flex flex-row justify-center items-center">
-		<div className="flex flex-row w-[13rem] h-[16rem]">
-			<Card key={`${tmp[0].id}`} name={`${tmp[0].name}`} src={`${tmp[0].src}`} detail={`${tmp[0].detail}`}/>
-		</div>
-		<div className="flex flex-row w-[13rem] h-[16rem]">
-			<Card key={`${tmp[1].id}`} name={`${tmp[1].name}`} src={`${tmp[1].src}`} detail={`${tmp[1].detail}`}/>
-		</div>
-		<div className="flex flex-row w-[13rem] h-[16rem]">
-			<Card key={`${tmp[2].id}`} name={`${tmp[2].name}`} src={`${tmp[2].src}`} detail={`${tmp[2].detail}`}/>
-		</div>
-		<div className="flex flex-row w-[13rem] h-[16rem]">
-			<Card key={`${tmp[3].id}`} name={`${tmp[3].name}`} src={`${tmp[3].src}`} detail={`${tmp[3].detail}`}/>
-		</div>
+	  	{
+		tmp.map(value => {
+            return (
+				<div key={`${value.id}`} className="flex flex-row w-[13rem] h-[16rem]">
+					<Card key={`${value.id}`} name={`${value.name}`} src={`${value.src}`} detail={`${value.detail}`}/>
+				</div>)
+          })
+		}
 	  </div>
 	  <div className="j">Token Control tab</div>
 	  <div className="l">

@@ -43,8 +43,8 @@ export default function Tmp() {
   });
 
   return (
-    <div className={`flex absolute w-full h-full flex-col`}>
-      <div className={`flex relative w-full h-[17.4rem] bg-gray-400 justify-center`}>
+	<div className={`flex absolute w-full h-full flex-col`}>
+      <div className={`flex relative bg-gray-400 justify-center items-center`}>
         {
           tmp.map(value => {
             return <Card key={`${value.id}`} name={`${value.name}`} src={`${value.src}`} detail={`${value.detail}`}/>

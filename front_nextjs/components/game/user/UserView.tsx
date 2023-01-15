@@ -20,7 +20,7 @@ export default function UserView({nickname2, src2}) {
 					priority={true}
       			/>
 			</div>
-			<div className="flex relative w-3/5 h-full justify-center items-center">
+			<div className="flex relative w-3/5 h-full justify-center items-center text-7xl font-['alssu']">
 				{nickname}
 			</div>
 		</div>

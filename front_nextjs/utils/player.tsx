@@ -12,6 +12,7 @@ export class Player {
 	token: number;
 	submit_card: number;
 	nickname: string;
+	avatar: string
 	
     constructor() {
         this.tiger = 1;
@@ -20,6 +21,8 @@ export class Player {
         this.gam = 2;
         this.drop = true;
 		this.token = 50;
+		this.avatar = "/api/images/avatar/1";
+		this.nickname = "nickname";
     }
 
 	isCardEmpty() : Boolean {

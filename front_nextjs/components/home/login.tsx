@@ -63,6 +63,7 @@ export default function LoginUI() {
 
       <style jsx>{`
         .button {
+          border: 1px solid black;
           font-family: "alssu", sans-serif;
           font-size: 3rem;
           letter-spacing: 0.4rem;

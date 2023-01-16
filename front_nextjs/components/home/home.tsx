@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { useState } from "react";
-import LoginUI from "./login"
+import HomeHeader from "./header";
+import LoginUI from "./login";
+
 
 export default function Home({ children, home }) {
   const [nickname, setNickname] = useState("");
@@ -8,6 +10,7 @@ export default function Home({ children, home }) {
 
   return (
     <main className="flex flex-col absolute w-full h-full justify-center items-center bg-no-repeat bg-center bg-contain ">
+      <HomeHeader/>
       <h1 className="font-alssu text-black">얼쑤 : 곶감전</h1>
         <LoginUI/>
       <style jsx>

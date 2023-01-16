@@ -44,12 +44,12 @@ export default function Grid() {
 	
   return (
     <div className="wrapper">
-      <div className="a border-2 border-red-100">Grave Card Tab</div>
-      <div className="b border-2 border-red-100">
+      <div className="grave">Grave Card Tab</div>
+      <div className="b">
 		<UserView nickname2={player2.nickname} src2={player2.avatar}/>
 	  </div>
 	  <div className="c">Token Count</div>
-      <div className="d">Navi Var</div>
+      <div className="navi">Navi Var</div>
 	  <div className="e">Battle Tab</div>
 	  <div className="f">Battle Action Tab</div>
       <div className="g">chatting tab</div>
@@ -75,9 +75,9 @@ export default function Grid() {
           grid-template-columns: repeat(10, 1fr);
           grid-template-rows: 0.5fr 0.5fr 1.5fr 1fr 0.5fr;
           grid-template-areas:
-		      "b b b b b b b c d d"
-			  "a e e e e e e f g g"
-			  "a e e e e e e f g g"
+		      "b b b b b b b c navi navi"
+			  "grave e e e e e e f g g"
+			  "grave e e e e e e f g g"
 			  "i i i i i i i j g g"
 			  "l l l l l l l j g g"
         }

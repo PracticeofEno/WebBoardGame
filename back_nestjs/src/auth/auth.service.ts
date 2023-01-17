@@ -15,8 +15,9 @@ export class AuthService {
 		private configService: ConfigService
 	) { }
 
-	async validateUser(nickname: string, pass: string): Promise<User> {
-		const user = await this.userService.findByNickname(nickname);
+	async validateUser(user_id: string, pass: string): Promise<User> {
+		const user = await this.userService.findByUserId(user_id);
+		console.log(user);
 		let compare = await bcrypt.compare(pass, user.password);
 		if (user && compare) {
 			return user;
@@ -39,8 +40,9 @@ export class AuthService {
 		return await this.jwtService.sign(object);
 	}
 
-	async login(nickname: string, password: string): Promise<string> {
-		let user = await this.validateUser(nickname, password);
+	async login(user_id: string, password: string): Promise<string> {
+		let user = await this.validateUser(user_id, password);
+		console.log(user);
 		if (user) {
 			let payload = { id : user.id, room: generateRandomString(10), host: true};
 			const jwt = await this.jwtService.sign(payload);
@@ -66,7 +68,7 @@ export class AuthService {
 		}
 		console.log(res.data.email);
 		try {
-			user = await this.userService.findByEmail(res.data.email);
+			user = await this.userService.findByUserId(res.data.email);
 		}
 		catch {
 			user = await this.userService.addUser(res.data.email, generateRandomString(10));

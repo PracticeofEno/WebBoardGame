@@ -40,8 +40,8 @@ export class AuthController {
   })
   @ApiOperation({ summary: '로그인', description: '성공시 유저id를 가진 jwt 반납' })
   @ApiCreatedResponse({ description: 'JWT 토큰', type: String})
-  async login(@Body('nickname') nickname, @Body('password') password) {
-    return await this.authService.login(nickname, password);
+  async login(@Body('id') id, @Body('password') password) {
+    return await this.authService.login(id, password);
   }
 
   @Post('/oauth-login')

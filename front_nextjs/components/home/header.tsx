@@ -1,9 +1,20 @@
+import { useEffect, useState } from "react";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
+
 export default function HomeHeader() {
-  
+	
+	const handle = useFullScreenHandle();
+	useEffect(() => {
+		console.log(handle);
+	})
+
     return (
       <header>
         {/* 다음으로 할 작업 : 조건부 렌더링 이용해서 룰북을 누르면 컴포넌트가 나타나게 만들고, 최대화 버튼을 누르면 웹페이지가 전체화면화 되게 만들기! */}
-        <div className="naviItem"><button className="w-full h-full bg-maximize bg-no-repeat bg-center bg-contain"></button></div>
+        <div className="naviItem">
+			<button onClick={handle.enter} className="w-full h-full bg-maximize bg-no-repeat bg-center bg-contain">
+				</button>
+			</div>
         <div className="naviItem"><button className="w-full h-full bg-rullbook bg-no-repeat bg-center bg-contain"></button></div>
         <style jsx>
           {`

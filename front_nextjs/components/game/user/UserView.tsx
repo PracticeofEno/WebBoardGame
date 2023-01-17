@@ -16,7 +16,7 @@ export default function UserView({nickname2, src2}) {
         			src={avatar}
 					alt="x"
 					width="100"
-					height="100"
+					height="114"
 					priority={true}
       			/>
 			</div>

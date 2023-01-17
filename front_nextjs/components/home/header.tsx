@@ -1,10 +1,32 @@
+import { useState } from "react";
+
 export default function HomeHeader() {
-  
+
+    const [isClick, setClick] = useState(false);
+
+    function toggleFullScreen(event) {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen()
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        }
+      }
+    }
+
     return (
       <header>
-        {/* 다음으로 할 작업 : 조건부 렌더링 이용해서 룰북을 누르면 컴포넌트가 나타나게 만들고, 최대화 버튼을 누르면 웹페이지가 전체화면화 되게 만들기! */}
-        <div className="naviItem"><button className="w-full h-full bg-maximize bg-no-repeat bg-center bg-contain"></button></div>
-        <div className="naviItem"><button className="w-full h-full bg-rullbook bg-no-repeat bg-center bg-contain"></button></div>
+        <div className="naviItem"><button onClick={toggleFullScreen} className="w-full h-full bg-maximize bg-no-repeat bg-center bg-contain"></button></div>
+        <div className="naviItem"><button onClick={() => {setClick((e) => !e);}} className="w-full h-full bg-rullbook bg-no-repeat bg-center bg-contain"></button></div>
+        {isClick && (<div onClick={() => {setClick((e) => !e);}} className="topLayer flex justify-center items-center fixed top-0 left-0 w-screen h-screen backdrop-blur-sm">
+          <div onClick={(event) => {
+            event.stopPropagation();
+          }}
+          className="flex w-3/4 h-3/4">
+            <div className="border-4 border-black w-1/2 h-full"></div>
+            <div className="border-4 border-black w-1/2 h-full"></div>
+          </div>
+        </div>)}
         <style jsx>
           {`
           header {

@@ -7,35 +7,57 @@ import * as bcrypt from "bcrypt";
 @CustomRepository(User)
 export class UserRepository extends Repository<User> {
 
-    async findByNickname(nickname: string) : Promise<User> {
-        const found = await this.findOne({
-            where: {
-                nickname: nickname,
-            },
-        })
-        return found;
-    }
+	async findById(id: number): Promise<User> {
+		const found = await this.findOne({
+			where: {
+				id: id,
+			},
+		})
+		return found;
+	}
 
-    async findByEmail(email: string) : Promise<User>{
-        const found = await this.findOne({
-            where: {
-                email: email,
-            },
-        })
-        return found;
-      }
+	async findByUserId(user_id: string): Promise<User> {
+		const found = await this.findOne({
+			where: {
+				user_id: user_id,
+			},
+		})
+		return found;
+	}
 
-    async addUser(nickname:string, password:string) : Promise<User>{
-        const salt = await bcrypt.genSalt();
-        const hash = await bcrypt.hash(password, salt);
-        let user = new User();
-        user.nickname = nickname;
-        user.password = hash;
-        user.email = nickname;
-        user.win = 0; 
-        user.lose = 0;
-        user.status = 0;
-        await this.save(user);
-        return user;
-    }
+	async findByNickname(nickname: string): Promise<User> {
+		const found = await this.findOne({
+			where: {
+				nickname: nickname,
+			},
+		})
+		return found;
+	}
+
+	async addUser(user_id: string, password: string): Promise<User> {
+		const salt = await bcrypt.genSalt();
+		const hash = await bcrypt.hash(password, salt);
+		let user = new User();
+		user.nickname = "";
+		user.password = hash;
+		user.user_id = user_id;
+		user.win = 0;
+		user.lose = 0;
+		user.status = 0;
+		await this.save(user);
+		return user;
+	}
+
+	async updateNickname(id: number, nickname: string): Promise<User | null> {
+		let user = await this.findByNickname(nickname);
+		let tmp = await this.findById(id);
+		if (!user) {
+			tmp.nickname = nickname;
+			await this.update(id, tmp);
+			return tmp;
+		}
+		else {
+			return null;
+		}
+	}
 }

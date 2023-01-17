@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Token from "../token/Token"
+import Token from "../token/token"
 
 export default function TokenView({gold}) {
 	const [one, setOne] = useState(0);

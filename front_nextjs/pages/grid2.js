@@ -4,6 +4,7 @@ import TokenView from "../components/game/token/TokenView";
 import UserView from "../components/game/user/UserView";
 import Card from "../components/game/card/Card";
 import CardView from "../components/game/card/CardView";
+import Grave from "../components/game/card/Grave";
 
 export default function Grid() {
   const [player1, setPlayer1] = useState(new Player());
@@ -11,7 +12,9 @@ export default function Grid() {
 
   return (
     <div className="wrapper">
-      <div className="a border-2 border-red-100">Grave Card Tab</div>
+      <div className="a border-2 border-red-100">
+        <Grave cards1={player1.submit_cards} cards2={player2.submit_cards}/>
+      </div>
       <div className="b border-2 border-red-100">
         <UserView nickname2={player2.nickname} src2={player2.avatar} />
       </div>
@@ -28,9 +31,7 @@ export default function Grid() {
           gam={player1.gam}
         />
       </div>
-      <div className="j">
-        Token Control tab
-      </div>
+      <div className="j">Token Control tab</div>
       <div className="l">
         <UserView nickname2="haha" src2="/api/images/avatar/1" />
       </div>

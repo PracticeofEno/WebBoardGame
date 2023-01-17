@@ -48,6 +48,8 @@ export default function CardView({ tiger, fox, rabbit, gam}) {
 				transform: translateY(-10px);
 				transition-duration: 0.1s;
 				transform: scale(1.2);
+				border-width: 2px;
+				border-color: rgba(156, 163, 175, 700 var(--tw-border-opacity));
 			}
 		`}
 		</style>

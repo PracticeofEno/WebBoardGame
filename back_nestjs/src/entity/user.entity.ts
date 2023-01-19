@@ -9,7 +9,7 @@ export class User extends BaseEntity {
 
   @Column()
   @ApiProperty()
-  email: string;
+  user_id: string;
 
   @Column()
   @ApiProperty()

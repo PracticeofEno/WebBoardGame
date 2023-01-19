@@ -12,7 +12,7 @@ export class GameController {
     @Get('/:room')
     async getRoomJwtCode(@Param('room') room){
         console.log(`room = ${room}`);
-        return this.gameService.getRoomJwtCode(room);
+        return this.gameService.getRoomGuestJwtCode(room);
     }
 
     @Get('/tmp/haha')

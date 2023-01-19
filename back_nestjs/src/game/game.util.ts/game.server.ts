@@ -196,6 +196,7 @@ export class GameData {
 
 	Start(client: Socket) {
 		if (this.roomState == GAME_STATE.READY && client.id == this.host.id) {
+			console.log("game.server");
 			let player1_dice = Math.floor((Math.random() * 6) + 1);
 			let player2_dice = Math.floor((Math.random() * 6) + 1);
 			while (player1_dice == player2_dice) {
@@ -306,4 +307,6 @@ export class GameData {
 	printfServerData() {
 		console.log(this);
 	}
+	
+	
 }

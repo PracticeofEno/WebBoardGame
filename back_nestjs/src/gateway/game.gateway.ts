@@ -58,13 +58,13 @@ export class GameGateWay implements OnGatewayConnection, OnGatewayDisconnect {
 	async handleConnection(@ConnectedSocket() client: Socket) {
 		let jwt: any = await this.checkValid(client);
 		try {
-			console.log(`connected websocket id = ${jwt["id"]} in ${jwt["room"]}`);
-			this.gameService.createGame(jwt["room"]);
-			this.gameService.joinRoom(jwt["room"], client);
+			console.log(`connected nickname = ${jwt["nickname"]} in ${jwt["room"]}`);
+			await this.gameService.createGame(jwt["room"]);
+			this.gameService.joinRoom(jwt, client);
 			client.join(jwt["room"]);
 		}
 		catch {
-
+			console.log('handle connection error');
 		}
 
 	}
@@ -76,7 +76,7 @@ export class GameGateWay implements OnGatewayConnection, OnGatewayDisconnect {
 			let room_data = this.gameService.findByRoom(jwt["room"]);
 			this.gameService.leaveRoom(room_data.room, client);
 		} catch (e){ 
-
+			console.log("disconnected error");
 		}
 	}
 
@@ -87,6 +87,7 @@ export class GameGateWay implements OnGatewayConnection, OnGatewayDisconnect {
 			this.gameService.setStartGame(jwt["room"], client);
 		}
 		catch (e){
+			console.log('start error');
 		}
 	}
 

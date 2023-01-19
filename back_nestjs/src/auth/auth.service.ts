@@ -17,7 +17,6 @@ export class AuthService {
 
 	async validateUser(user_id: string, pass: string): Promise<User> {
 		const user = await this.userService.findByUserId(user_id);
-		console.log(user);
 		let compare = await bcrypt.compare(pass, user.password);
 		if (user && compare) {
 			return user;
@@ -42,9 +41,8 @@ export class AuthService {
 
 	async login(user_id: string, password: string): Promise<string> {
 		let user = await this.validateUser(user_id, password);
-		console.log(user);
 		if (user) {
-			let payload = { id : user.id, room: generateRandomString(10), host: true};
+			let payload = { id : user.id, room: generateRandomString(10), nickname: user.nickname, host: true};
 			const jwt = await this.jwtService.sign(payload);
 			return jwt;
 		}

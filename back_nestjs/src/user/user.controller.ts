@@ -37,7 +37,7 @@ export class UserController {
 	@Get("/")
 	@UseGuards(JwtAuthGarud)
 	async getSelf(@Request() req) {
-		return req.user.nickname;
+		return req.user;
 	}
 
 	@Post("/nickname")

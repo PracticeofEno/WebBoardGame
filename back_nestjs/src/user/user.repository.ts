@@ -51,7 +51,7 @@ export class UserRepository extends Repository<User> {
 	async updateNickname(id: number, nickname: string): Promise<User | null> {
 		let user = await this.findByNickname(nickname);
 		let tmp = await this.findById(id);
-		if (!user) {
+		if (user == null) {
 			tmp.nickname = nickname;
 			await this.update(id, tmp);
 			return tmp;

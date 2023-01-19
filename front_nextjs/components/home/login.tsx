@@ -27,10 +27,10 @@ export default function LoginUI() {
 			console.log(res);
 			Cookies.set('jwt', res);
 			let res2 = await getSelf();
-			if (res2 == "")
+			if (res2.nickname == "")
 				router.push("/guest");
 			else	
-				router.push("/test_lobby");
+				router.push("/grid2");
 		}
 		catch (e) {
 			console.log("로그인 실패");

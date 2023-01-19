@@ -12,7 +12,7 @@ export class Player {
 	token: number;
 	submit_card: number;
 	nickname: string;
-	avatar: string
+	avatar: string;
 	submit_cards: Array<string>;
 	
     constructor() {

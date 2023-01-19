@@ -5,7 +5,6 @@ export default function HomeHeader() {
 	
 	const handle = useFullScreenHandle();
 	useEffect(() => {
-		console.log(handle);
 	})
 
     return (

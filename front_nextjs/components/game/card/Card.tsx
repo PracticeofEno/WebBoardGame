@@ -1,7 +1,20 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-export default function Card({ name }) {
+export default function Card({ name , gameSocket}) {
+
+	const [socket, setSocket] = useState(null);
+	useEffect(() => {
+		setSocket(gameSocket);
+	})
+
+	function submitCard() {
+		console.log("aa");
+		console.log(socket);
+		socket?.emit("submit_card", {
+			kind: tmp[idx].name
+		})
+	}
 
 	let tmp = [
 		{	id: '1',	name: "여우",	src: "/images/fox.svg",	detail: "　토끼,곶감을 이김",},
@@ -23,7 +36,7 @@ export default function Card({ name }) {
 	})
 
 	return (
-		<div className="w-full h-full relative">
+		<div onClick={submitCard} className="w-full h-full relative">
 			<img src="/images/card_template.svg" alt="" className="absolute w-full h-full" />
 			<img src={tmp[idx].src} alt="" className="ImgCharacter" />
 			<p className="CardTitle">{tmp[idx].name}</p>

@@ -28,7 +28,7 @@ export default function Tmp() {
         "/api/game/" + queryString.parse(router.asPath)["/test_invite?c"]
       );
       Cookies.set("jwt", posts.data);
-      router.push('/test_lobby');
+      router.push('/grid2');
     })();
   }, []);
 

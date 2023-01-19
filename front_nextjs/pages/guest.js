@@ -1,15 +1,19 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 import HomeHeader from "../components/home/header";
 import { updateNickname } from "../pages/api/User";
 
 export default function Guest({ children, home }) {
   const [nickname, setNickname] = useState("");
+  const router = useRouter();
+
   async function ApiSetNickname() {
     try {
       let res = await updateNickname(nickname);
-      console.log(res);
+	  console.log(res);
+      router.push("/grid2");
     } catch (e) {
-      console.log("회원가입 실패");
+      console.log("닉네임 설정 실패");
     }
   }
 

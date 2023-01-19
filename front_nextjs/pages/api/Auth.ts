@@ -1,10 +1,10 @@
 import axios, { type AxiosResponse } from "axios";
 
-export async function login(nickname: string, password: string) {
+export async function login(id: string, password: string) {
 	let response;
     	response = await axios.post("/api/auth/login",
 	        {
-          	nickname: nickname,
+          	id: id,
           	password: password
         	},
       	);

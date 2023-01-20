@@ -18,6 +18,8 @@ export class Player {
 	socket: Socket;
 	token: number;
 	submit_card: number;
+	nickname: string;
+	avatar: string;
 
     
     constructor() {
@@ -30,6 +32,8 @@ export class Player {
         this.five = 5;
         this.ten = 3;
 		this.token = 50;
+		this.nickname="default nickname";
+		this.avatar="/api/images/avatar/1";
     }
 
 	isCardEmpty() : Boolean {

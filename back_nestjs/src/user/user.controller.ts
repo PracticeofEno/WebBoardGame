@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Query, UseGuards, Request, Body, Param} from '@nestjs/common';
+import { Controller, Get, Post, Query, UseGuards, Request, Body, Param, Req} from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { PostAddUser } from 'src/api/entities/base.response';
-import { AuthService } from 'src/auth/auth.service';
+import { JwtAuthGarud } from 'src/auth/jwt/jwt-auth.gaurd';
 import { User } from 'src/entity/user.entity';
 import { UserService } from "./user.service";
 
@@ -32,5 +32,17 @@ export class UserController {
     @ApiCreatedResponse({ description: '생성된 유저 정보', type: User})
     async addUser(@Body('nickname') nickname, @Body('password') password) : Promise<User> {
         return await this.userService.addUser(nickname, password);
+    }
+
+	@Get("/")
+	@UseGuards(JwtAuthGarud)
+	async getSelf(@Request() req) {
+		return req.user;
+	}
+
+	@Post("/nickname")
+	@UseGuards(JwtAuthGarud)
+	async updateNickname(@Request() req, @Body('nickname') nickname) {
+        return await this.userService.updateNickname(req.user.id, nickname);
     }
 }

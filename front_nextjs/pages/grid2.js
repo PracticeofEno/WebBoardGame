@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Player } from "../utils/player";
 import UserView from "../components/game/user/UserView";
 import CardView from "../components/game/card/CardView";
 import Grave from "../components/game/card/Grave";
 import io from "socket.io-client";
 import Cookies from "js-cookie";
+import {SocketContext, socket} from 'context/socket';
 
 export default function Grid() {
-  const [socket, setSocket] = useState(null);
+  const socket = useContext(SocketContext);
+//   const [socket, setSocket] = useState(null);
   const [host, setHost] = useState(false);
   const [startable, setStartable] = useState(false);
   const [self_number, setSelfNumber] = useState(999);
@@ -19,16 +21,16 @@ export default function Grid() {
   const [opponent, setOpponent] = useState(new Player());
 
   useEffect(() => {
-    const socket = io("http://localhost:5000/game", {
-      transportOptions: {
-        polling: {
-          extraHeaders: {
-            Authorization: "Bearer " + Cookies.get("jwt"),
-          },
-        },
-      },
-    });
-    setSocket(socket);
+    // const socket = io("http://localhost:5000/game", {
+    //   transportOptions: {
+    //     polling: {
+    //       extraHeaders: {
+    //         Authorization: "Bearer " + Cookies.get("jwt"),
+    //       },
+    //     },
+    //   },
+    // });
+    // setSocket(socket);
 
     socket?.on("connect", async () => {
       console.log("socket connected");
@@ -54,50 +56,50 @@ export default function Grid() {
       }
     });
 
-    socket.on("host", (message) => {
+    socket?.on("host", (message) => {
       setHost(true);
       console.log(`you are host`);
     });
 
-    socket.on("join_user", (message) => {
+    socket?.on("join_user", (message) => {
       console.log("user joined");
     });
 
-    socket.on("ready", (message) => {
+    socket?.on("ready", (message) => {
       console.log("ready to start");
       setStartable(true);
     });
 
-    socket.on("unready", (message) => {
+    socket?.on("unready", (message) => {
       setStartable(false);
     });
 
-    socket.on("end", (message) => {
+    socket?.on("end", (message) => {
       let message2 = "winner is " + message.winner;
       setMessage(message2);
       console.log(message);
     });
 
-    socket.on("error", (data) => {
+    socket?.on("error", (data) => {
       setMessage(data.message);
       console.log(data.message);
     });
 
-    socket.on("start", (data) => {
+    socket?.on("start", (data) => {
       setGameState(true);
       console.log("game start");
     });
 
-	socket.on("start_game", (data) => {
+	socket?.on("start_game", (data) => {
 		setGameState(true);
 		console.log("game start");
 	  });
 
 
     return () => {
-      socket.disconnect();
+      socket?.disconnect();
     };
-  }, [self_number, host]);
+  }, [self_number, host, socket, mine, opponent]);
 
   function tmp() {
     console.log(self_number);
@@ -108,6 +110,7 @@ export default function Grid() {
   }
 
   return (
+	<SocketContext.Provider value={socket}>
     <div className="wrapper">
       <div className="a border-2 border-red-100">
         <Grave
@@ -201,5 +204,6 @@ export default function Grid() {
         }
       `}</style>
     </div>
+	</SocketContext.Provider>
   );
 }

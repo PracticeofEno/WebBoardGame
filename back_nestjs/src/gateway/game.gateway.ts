@@ -14,7 +14,6 @@ import { Server, Socket } from "socket.io";
 import { AuthService } from 'src/auth/auth.service';
 import { GameService } from 'src/game/game.service';
 
-let clientMap = new Map<string, Socket>();
 
 @WebSocketGateway({
 	cors: {
@@ -56,17 +55,7 @@ export class GameGateWay implements OnGatewayConnection, OnGatewayDisconnect {
 	}
 
 	async handleConnection(@ConnectedSocket() client: Socket) {
-		let jwt: any = await this.checkValid(client);
-		try {
-			console.log(`connected nickname = ${jwt["nickname"]} in ${jwt["room"]}`);
-			await this.gameService.createGame(jwt["room"]);
-			this.gameService.joinRoom(jwt, client);
-			client.join(jwt["room"]);
-		}
-		catch {
-			console.log('handle connection error');
-		}
-
+		console.log(`socket connection -> ${client.id}`);
 	}
 
 	async handleDisconnect(@ConnectedSocket() client) {
@@ -77,6 +66,20 @@ export class GameGateWay implements OnGatewayConnection, OnGatewayDisconnect {
 			this.gameService.leaveRoom(room_data.room, client);
 		} catch (e){ 
 			console.log("disconnected error");
+		}
+	}
+
+	@SubscribeMessage("create_game")
+	async createGameRoom(@ConnectedSocket() client) {
+		let jwt: any = await this.checkValid(client);
+		try {
+			console.log(`connected nickname = ${jwt["nickname"]} in ${jwt["room"]}`);
+			await this.gameService.createGame(jwt["room"]);
+			this.gameService.joinRoom(jwt, client);
+			client.join(jwt["room"]);
+		}
+		catch {
+			console.log('handle connection error');
 		}
 	}
 
@@ -111,6 +114,7 @@ export class GameGateWay implements OnGatewayConnection, OnGatewayDisconnect {
 
 	@SubscribeMessage("submit_choice")
 	async submit_choice(@ConnectedSocket() client, @MessageBody("choice") choice) {
+		console.log("here is submit_choice");
 		let jwt = await this.checkValid(client);
 		try {
 			this.gameService.submitChoice(jwt["room"], client, choice);

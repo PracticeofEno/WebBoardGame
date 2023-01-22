@@ -37,6 +37,7 @@ export class GameService {
 		if (player) {
 			room_data.players[player - 1].socket = client;
 			room_data.players[player - 1].nickname = nickname;
+			// room_data.players[player - 1].avatar = avatar;
 			client.emit("player", player);
 			room_data.sendMessage("current_player", {
 				player1_number: 1,
@@ -105,17 +106,28 @@ export class GameService {
 	setStartGame(room: string, client: Socket) {
 		let room_data = this.gameRepository.findByRoom(room);
 		let dice = room_data.Start(client);
-		
 	}
 
 	submitCard(room: string, client: Socket, kind: string) {
 		let room_data = this.gameRepository.findByRoom(room);
-		room_data.submitCard(client, kind);
+		let tf = room_data.submitCard(client, kind);
+		if (tf) {
+			room_data.sendMessage("submit_card", {
+				player_number: room_data.getPlayerNumber(client),
+				kind: kind
+			})
+		}
 	}
 
 	submitToken(room: string, client: Socket, count: number) {
 		let room_data = this.gameRepository.findByRoom(room);
-		room_data.submitToken(client, count);
+		let tf = room_data.submitToken(client, count);
+		if (tf) {
+			room_data.sendMessage("submit_token", {
+				player_number: room_data.getPlayerNumber(client),
+				count: count
+			})
+		}
 	}
 
 	submitChoice(room: string, client: Socket, choice: string) {
@@ -147,12 +159,11 @@ export class GameService {
 
 
 	async tmp() {
+		console.log('kiki')
 		this.gameRepository.servers.map((value) => {
-			console.log(`gameState -> ${value.roomState}`);
-			console.log(`player1 -> ${value.players[0].token}`);
-			console.log(`player2 -> ${value.players[1].token}`);
-			console.log(`player1_token -> ${value.player1_token}`);
-			console.log(`player2_token-> ${value.player2_token}`);
+			console.log(value.players[0]);
+			console.log("==================");
+			console.log(value.players[1]);
 		})
 	}
 }

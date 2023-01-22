@@ -18,7 +18,7 @@ export default function Grave({cards1, cards2, state}) {
 				<img src="/images/back.svg" onMouseOver={(e) => setVisible(true)} onMouseLeave={(e) => setVisible(false)} alt="" className="w-full h-full back" />
 			</div>
 			{
-				(visible && state) && (
+				(visible && state > 0) && (
 					<div className="absolute w-[550%] h-2/3 left-[10.5vw] bg-gray-400 cardBox flex-col">
 						<div className="flex flex-row relaitve w-[100%] h-[50%] bg-pink-200 justify-start">
 							{

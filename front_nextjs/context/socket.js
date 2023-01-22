@@ -1,14 +1,14 @@
-import io from "socket.io-client";
-import { createContext } from "react"; 
-import Cookies from "js-cookie";
+// import socketio from "socket.io-client";
+// import Cookies from "js-cookie";
+// import React from "react";
 
-export  const socket = io("http://localhost:5000/game", {
-	transportOptions: {
-	  polling: {
-		extraHeaders: {
-		  Authorization: "Bearer " + Cookies.get("jwt"),
-		},
-	  },
-	},
-  });
-export const SocketContext = createContext();
+// export const socket = socketio.connect("http://localhost:5000/game",  {
+// 	transportOptions: {
+// 	  polling: {
+// 		extraHeaders: {
+// 		  Authorization: "Bearer " + Cookies.get("jwt"),
+// 		},
+// 	  },
+// 	},
+// });
+// export const SocketContext = React.createContext();

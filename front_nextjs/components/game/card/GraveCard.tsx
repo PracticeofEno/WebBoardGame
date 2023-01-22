@@ -13,28 +13,30 @@ export default function Card({ name }) {
 	
 	const [idx, setIdx] = useState(0);
 	useEffect(() => {
-		if (name == "호랑이") 
+		if (name == "tiger") 
 			setIdx(2);
-		else if (name == "여우")
+		else if (name == "fox")
 			setIdx(0);
-		else if (name == "토끼")
+		else if (name == "rabbit")
 			setIdx(1);
-		else if (name == "곶감")
+		else if (name == "gam")
 			setIdx(3);
-		else if (name == "뒷면")
+		else if (name == "back")
 			setIdx(4);
+		else 
+			setIdx(-1);
 	})
 
 	return (
 		<div className="w-full h-full relative">
 			{
-				(idx == 4) ? <img src="/images/back.svg" alt="" className="absolute w-full h-full px-2" /> : <img src="/images/card_template.svg" alt="" className="absolute w-full h-full" />
+				(idx == 4 || idx == -1) && <img src="/images/back.svg" alt="" className="absolute w-full h-full px-2" />
 			}
 			{
-				(idx != 4) && <img src="/images/card_template.svg" alt="" className="absolute w-full h-full" />
+				(idx != 4 && idx != -1) && <img src="/images/card_template.svg" alt="" className="absolute w-full h-full" />
 			}
 			{
-				(idx != 4) && <img src={tmp[idx].src} alt="" className="ImgCharacter" />
+				(idx != 4 && idx != -1) && <img src={tmp[idx].src} alt="" className="ImgCharacter" />
 			}
 			<style jsx>{`
 			.ImgCharacter {

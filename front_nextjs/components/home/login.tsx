@@ -24,7 +24,7 @@ export default function LoginUI() {
 	async function apiLogin() {
 		try {
 			let res = await login(nickname, password);
-			console.log(res);
+			// console.log(res);
 			Cookies.set('jwt', res);
 			let res2 = await getSelf();
 			if (res2.nickname == "")

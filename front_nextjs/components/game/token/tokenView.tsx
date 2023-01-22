@@ -23,22 +23,22 @@ export default function TokenView({gold}) {
 	})
 
 	return (
-		<div className={`flex w-full h-full flex-row py-[2rem]`}>
-			<div className="flex block w-1/3 h-full flex-col justify-start">
+		<div className={`flex w-full h-full flex-col py-[2rem]`}>
+			<div className="flex block w-full h-1/3 flex-row justify-start">
 				{ 
 					Array.apply(null, { length: ten }).map((e, i) => (
 						<Token key={i} gold={10}/>
 					))
 				}
 			</div>
-			<div className="flex block w-1/3 h-full flex-row justify-start">
+			<div className="flex block w-full h-1/3 flex-row justify-start">
 				{
 					Array.apply(null, { length: five }).map((e, i) => (
 						<Token key={i} gold={5}/>
 					))
 				}
 			</div>
-			<div className="flex block w-1/3 h-full flex-row justify-start">
+			<div className="flex block w-full h-1/3 flex-row justify-start">
 				{
 					Array.apply(null, { length: one }).map((e, i) => (
 						<Token key={i} gold={1}/>

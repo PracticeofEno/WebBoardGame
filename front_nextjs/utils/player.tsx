@@ -3,6 +3,15 @@ export class SubmitCardDto {
 	count: number
 }
 
+export enum GAME_STATE{
+	READY,            			//입장 단계
+	FIRST_CARD_SELECT,          //선턴 플레이어 카드 제출단계
+	FIRST_MONEY_SELECT,         // 후턴 플레이어 카드 제출 단계
+	SECOND_CARD_SELECT,     	// 후턴 플레이어 선택 단계 (승부 포기 따당)
+	SECOND_CHOICE,
+	THIRD_CHOICE_SELECT         // 따당시
+}
+
 export class Player {
     tiger: number
     fox: number;
@@ -10,11 +19,11 @@ export class Player {
     gam: number;
     drop: Boolean;
 	token: number;
-	submit_card: number;
+	submit_card: string;
 	nickname: string;
 	avatar: string;
 	submit_cards: Array<string>;
-	
+
     constructor() {
         this.tiger = 1;
         this.fox = 3;
@@ -25,6 +34,7 @@ export class Player {
 		this.avatar = "/api/images/avatar/1";
 		this.nickname = "nickname";
 		this.submit_cards = new Array<string>();
+		this.submit_card = "";
     }
 
 	isCardEmpty() : Boolean {
@@ -64,5 +74,16 @@ export class Player {
 
 	increaseToken(count: number) {
 		this.token = this.token + count;
+	}
+
+	submitCard(name: string) {
+		if (name == "호랑이")
+			this.tiger--;
+		else if (name == "여우")
+			this.fox--;
+		else if (name == "토끼")
+			this.rabbit--;
+		else if (name == "곶감")
+			this.gam--;
 	}
 }

@@ -1,21 +1,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-export default function Card({ name , gameSocket}) {
-
-	const [socket, setSocket] = useState(null);
-	useEffect(() => {
-		setSocket(gameSocket);
-	})
-
-	function submitCard() {
-		console.log("aa");
-		console.log(socket);
-		socket?.emit("submit_card", {
-			kind: tmp[idx].name
-		})
-	}
-
+export default function Card({ name, socket}) {
 	let tmp = [
 		{	id: '1',	name: "여우",	src: "/images/fox.svg",	detail: "　토끼,곶감을 이김",},
 		{	id: '2',	name: "토끼",	src: "/images/rabbit.svg",	detail: "　곶감을 이김",},
@@ -35,8 +21,23 @@ export default function Card({ name , gameSocket}) {
 			setIdx(3);
 	})
 
+	function tmp2 (){
+		let tmp;
+		if (idx == 0)
+			tmp = "fox";
+		else if (idx == 1)
+			tmp = "rabbit";
+		else if (idx == 2)
+			tmp = "tiger";
+		else if (idx == 3)
+			tmp = "gam";
+		socket?.emit("submit_card", {
+			kind: tmp
+		});
+	}
+
 	return (
-		<div onClick={submitCard} className="w-full h-full relative">
+		<div onClick={tmp2} className="w-full h-full relative">
 			<img src="/images/card_template.svg" alt="" className="absolute w-full h-full" />
 			<img src={tmp[idx].src} alt="" className="ImgCharacter" />
 			<p className="CardTitle">{tmp[idx].name}</p>

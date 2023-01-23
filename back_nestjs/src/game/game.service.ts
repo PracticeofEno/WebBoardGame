@@ -74,8 +74,17 @@ export class GameService {
 					this.gameRepository.deleteRoom(room_data.room);
 				}
 				else {
+					if (player == 1) {
+						room_data.players[1].socket.emit("host", null);
+						room_data.host = room_data.players[1].socket;
+					}
+					else if (player == 2){
+						room_data.players[0].socket.emit("host", null);
+						room_data.host = room_data.players[0].socket;
+					}
 					room_data.players[player - 1].socket = null;
 					room_data.sendMessage("leave_player", player);
+					room_data.sendMessage("unready", null);
 				}
 			}
 		}
@@ -105,6 +114,7 @@ export class GameService {
 
 	setStartGame(room: string, client: Socket) {
 		let room_data = this.gameRepository.findByRoom(room);
+		console.log(`start game room -> ${room}`);
 		let dice = room_data.Start(client);
 	}
 

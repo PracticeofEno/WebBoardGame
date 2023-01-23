@@ -78,17 +78,28 @@ export class GameData {
 
 	getWinnerPlayerNumber(): number {
 		if (this.player1_card == 3 && this.player2_card == 0) {
-			return 1;
+			return 2;
 		}
 		else if (this.player1_card == 0 && this.player2_card == 3) {
-			return 0;
+			return 1;
 		}
 		if (this.player1_card > this.player2_card)
-			return 0;
-		else if (this.player1_card < this.player2_card)
 			return 1;
-		else 
+		else if (this.player1_card < this.player2_card)
 			return 2;
+		else 
+			return 3;
+	}
+
+	getStringWithCardNumber(number: number): string {
+		if (number == 0)
+			return "gam";
+		else if (number == 1)
+			return "rabbit";
+		else if (number == 2)
+			return "fox";
+		else if (number == 3)
+			return "tiger";
 	}
 
 	isEndGame() : Boolean{
@@ -133,11 +144,12 @@ export class GameData {
 		}
 
 		let winner = this.getWinnerPlayerNumber();
+		console.log(`winner => ${winner}`);
 		let looser = (winner ? 0 : 1)
 		let gamExist: Boolean = false;
 		if ((this.player1_card == 0 && this.player2_card == 3) || (this.player1_card == 3 && this.player2_card == 0))
 			gamExist = true;
-		if (winner == 2) {
+		if (winner == 3) {
 			console.log("match draw");
 			this.sendMessage("draw", null);
 			this.matchDraw();
@@ -152,10 +164,12 @@ export class GameData {
 			this.players[winner].increaseToken(this.player2_token);
 			this.player1_token = 0;
 			this.player2_token = 0;
+			console.log("aefaef")
+			console.log(this.getStringWithCardNumber(this.player1_card))
 			this.sendMessage("result", {
 				winner: winner,
-				player1_card: this.player1_card,
-				player2_card: this.player2_card,
+				player1_card: this.getStringWithCardNumber(this.player1_card),
+				player2_card: this.getStringWithCardNumber(this.player2_card)
 			});
 			console.log(`Result Winner -> player[${winner}] -> card [${this.player1_card} vs ${this.player2_card}]`);
 		}
@@ -208,6 +222,7 @@ export class GameData {
 	}
 
 	Start(client: Socket) {
+		console.log(`try start room ${client.id == this.host.id}`);
 		if (this.roomState == GAME_STATE.READY && client.id == this.host.id) {
 			console.log("game.server");
 			let player1_dice = Math.floor((Math.random() * 6) + 1);

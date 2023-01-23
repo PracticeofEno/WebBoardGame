@@ -35,7 +35,7 @@ export default function Grave({cards1, cards2, state}) {
 						</div>
 						<div className="flex flex-row relaitve w-[100%] h-[50%] bg-blue-200">
 						{
-								player1Cards.map((value, index) => {
+								player2Cards.map((value, index) => {
 									console.log(value);
 									return (
 										(value.length > 0)  && (<div key={index} className="w-[11%] h-full bg-gray-400">

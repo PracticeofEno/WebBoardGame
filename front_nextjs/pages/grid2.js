@@ -54,7 +54,6 @@ export default function Grid() {
       }) => {
         if (self_number != 999) {
           if (self_number == player1_number) {
-            console.log("abc");
             setMine({
               ...mine,
               nickname: player1_nickname,
@@ -65,8 +64,8 @@ export default function Grid() {
               nickname: player2_nickname,
               avatar: player2_avatar,
             });
-          } else {
-            console.log("def");
+          } 
+		  else {
             setMine({
               ...mine,
               nickname: player2_nickname,
@@ -133,8 +132,17 @@ export default function Grid() {
 	//결과 나왔을때
 	socket?.on("result", (data) => {
 		console.log(data);
-		setMine({...mine, submit_card: ""});
-		setOpponent({...opponent, submit_card: ""});
+		if (self_number == 1) {
+			mine.submit_cards.push(data.player1_card);
+			opponent.submit_cards.push(data.player2_card);
+		}
+		else {
+			mine.submit_cards.push(data.player2_card);
+			opponent.submit_cards.push(data.player1_card);
+		}
+		setMine({...mine, submit_card: "", submit_cards: mine.submit_cards});
+		setOpponent({...opponent, submit_card: "", submit_cards: opponent.submit_cards});
+
 	});
 
 	//결과가 비겼을때 

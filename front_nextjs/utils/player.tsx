@@ -13,7 +13,7 @@ export enum GAME_STATE{
 }
 
 export class Player {
-    tiger: number
+    tiger: number;
     fox: number;
     rabbit: number;
     gam: number;

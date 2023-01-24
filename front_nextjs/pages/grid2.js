@@ -42,7 +42,7 @@ export default function Grid() {
           if (self_number == player1_number) {
             mine.nickname = player1_nickname;
             mine.avatar = player1_avatar;
-            setMine({...mine,nickname: player1_nickname,avatar: player1_avatar,});
+            setMine({...mine, nickname: player1_nickname,avatar: player1_avatar,});
 
             opponent.nickname = player2_nickname;
             opponent.avatar = player2_avatar;
@@ -154,7 +154,7 @@ export default function Grid() {
     return () => {
       socket?.disconnect();
     };
-  }, [self_number]);
+  }, [self_number, ]);
 
   function tmp() {
     console.log(`tmp mine.nickname => ${mine.nickname}`);

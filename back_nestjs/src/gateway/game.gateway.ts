@@ -56,6 +56,16 @@ export class GameGateWay implements OnGatewayConnection, OnGatewayDisconnect {
 
 	async handleConnection(@ConnectedSocket() client: Socket) {
 		console.log(`socket connection -> ${client.id}`);
+		let jwt: any = await this.checkValid(client);
+		try {
+			console.log(`connected nickname = ${jwt["nickname"]} in ${jwt["room"]}`);
+			await this.gameService.createGame(jwt["room"]);
+			this.gameService.joinRoom(jwt, client);
+			client.join(jwt["room"]);
+		}
+		catch {
+			console.log('handle connection error');
+		}
 	}
 
 	async handleDisconnect(@ConnectedSocket() client) {
@@ -120,6 +130,11 @@ export class GameGateWay implements OnGatewayConnection, OnGatewayDisconnect {
 			this.gameService.submitChoice(jwt["room"], client, choice);
 		}
 		catch {}
+	}
+
+	@SubscribeMessage("kk")
+	async kk(@ConnectedSocket() client) {
+		client.emit('kk', null);
 	}
 
 

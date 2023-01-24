@@ -8,8 +8,8 @@ export default function Grave({cards1, cards2, state}) {
 	const [visible, setVisible] = useState(false);
 
 	useEffect(() => {
-		setPlayer1Cards(cards1);
-		setPlayer2Cards(cards2);
+		setPlayer1Cards(cards2);
+		setPlayer2Cards(cards1);
 	}, [])
 
 	return (

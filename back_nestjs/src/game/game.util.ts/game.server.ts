@@ -168,7 +168,6 @@ export class GameData {
 			this.players[winner].increaseToken(this.player2_token);
 			this.player1_token = 0;
 			this.player2_token = 0;
-			console.log("aefaef")
 			console.log(this.getStringWithCardNumber(this.player1_card))
 			this.sendMessage("result", {
 				winner: winner,

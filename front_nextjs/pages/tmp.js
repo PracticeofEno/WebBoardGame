@@ -27,6 +27,10 @@ export default function Tmp() {
 		socket2?.on("tmp", () => {
 			console.log(`inside useEffect => ${tmp.name}`);
 		});
+
+		return () => {
+			socket2?.disconnect();
+		};
 		
 	}, []);
 

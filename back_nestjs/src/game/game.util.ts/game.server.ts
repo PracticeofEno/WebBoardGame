@@ -151,7 +151,11 @@ export class GameData {
 			gamExist = true;
 		if (winner == 3) {
 			console.log("match draw");
-			this.sendMessage("draw", null);
+			this.sendMessage("result", {
+				winner: winner,
+				player1_card: this.getStringWithCardNumber(this.player1_card),
+				player2_card: this.getStringWithCardNumber(this.player2_card)
+			});
 			this.matchDraw();
 		}
 		else {

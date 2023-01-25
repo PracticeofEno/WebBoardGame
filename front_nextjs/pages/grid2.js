@@ -163,11 +163,15 @@ export default function Grid() {
         };
         socket?.on('submit_card', submit_card_handler);
 
-        const drop_handler = data => {
+        const drop_handler = (data) => {
+			if (data.player == self_number) {
+				mine.drop = false;
+			}
             mine.submit_cards.push("back");
             opponent.submit_cards.push("back");
             setMine({
                 ...mine,
+				drop: mine.drop,
                 submit_card: '',
                 submit_cards: mine.submit_cards,
             });
@@ -181,7 +185,6 @@ export default function Grid() {
 
         return () => {
             socket?.off('current_player', current_player_handler);
-            
             socket?.off('host', host_handler);
             socket?.off('ready', ready_handler);
             socket?.off('start', start_handler);
@@ -241,10 +244,11 @@ export default function Grid() {
                 )}
             </div>
             <div className="f">
-                {turn == self_number &&
-                    gameState == GAME_STATE.SECOND_CHOICE && (
-                        <Choise socket={socket} />
-                    )}
+                {
+					(turn == self_number) && (gameState == GAME_STATE.SECOND_CHOICE || gameState == GAME_STATE.THIRD_CHOICE_SELECT) && (
+                        <Choise socket={socket} gameState={gameState} drop={mine.drop}/>
+                    )
+				}
             </div>
             <div className="g">chatting tab</div>
             <div className="i flex flex-row justify-center items-center">

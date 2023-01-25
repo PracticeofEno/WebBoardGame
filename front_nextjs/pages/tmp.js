@@ -40,7 +40,7 @@ export default function Tmp() {
 			socket?.off("connect_to_name_change", connect_to_name_change_handler);
 		};
 		
-	}, []);
+	}, [tmp]);
 
 	function tmp2() {
 		console.log(`outside useEffect => ${tmp.name}`);

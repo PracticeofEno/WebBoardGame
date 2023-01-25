@@ -10,17 +10,9 @@ import Battle from '../components/game/battle/battle';
 import Choise from '../components/game/battle/choise';
 import { MiddlewareNotFoundError } from 'next/dist/shared/lib/utils';
 
-// let socket = io.connect("http://localhost:5000/game", {
-// 		transportOptions: {
-// 		  polling: {
-// 			extraHeaders: {
-// 				  Authorization: "Bearer " + Cookies.get("jwt"),
-// 			},
-// 		  },
-// }});
+let socket;
 
 export default function Grid() {
-    const [socket, setSocket] = useState(null); // 연결 소켓
     const [host, setHost] = useState(false); // 방장 여부
     const [startable, setStartable] = useState(false); // 게임 시작 가능 여부
     const [self_number, setSelfNumber] = useState(999); // 방에서 자신의 번호
@@ -30,8 +22,9 @@ export default function Grid() {
     const [mine, setMine] = useState(new Player()); //자신 데이터
     const [opponent, setOpponent] = useState(new Player()); //상대 데이터
 
-    useEffect(() => {
-        let socket = io.connect('http://localhost:5000/game', {
+
+	useEffect(() => {
+		socket = io.connect('http://localhost:5000/game', {
             transportOptions: {
                 polling: {
                     extraHeaders: {
@@ -40,47 +33,43 @@ export default function Grid() {
                 },
             },
         });
-		setSocket(socket);
-        // if (socket?.connected == false || socket == null) {
-        // 	let socket = io.connect("http://localhost:5000/game", {
-        // 	transportOptions: {
-        // 	  polling: {
-        // 		extraHeaders: {
-        // 			  Authorization: "Bearer " + Cookies.get("jwt"),
-        // 		},
-        // 	  },
-        // 	}});
-        // 	setSocket(socket);
-        // }
+		const player_handler = message => {
+			console.log("set self_number -> message");
+            setSelfNumber(message);
+        };
+        socket?.on('player', player_handler);
 
+		return () => {
+			socket?.off('player', player_handler);
+            socket?.disconnect();
+        };
+	}, [self_number])
+
+    useEffect(() => {
         const connect_handler = () => {
             console.log('socket connect');
         };
         socket?.on('connect', connect_handler);
 
-        const player_handler = message => {
-            setSelfNumber(message);
-        };
-        socket?.on('player', player_handler);
-
         const current_player_handler = ({ player1_number, player1_nickname,  player1_avatar, player2_nickname, player2_avatar,player2_number,}) => {
-			if (self_number != 999) {
+			console.log("aaa");
             if (self_number == player1_number) {
-                mine.nickname = player1_nickname;
-				mine.avatar = player1_avatar;
-				opponent.nickname = player2_nickname;
-				opponent.avatar = player2_avatar;
+				console.log("self_number == player1_number");
+                // mine.nickname = player1_nickname;
+				// mine.avatar = player1_avatar;
+				// opponent.nickname = player2_nickname;
+				// opponent.avatar = player2_avatar;
                 setMine({ ...mine, nickname: player1_nickname, avatar: player1_avatar, });
                 setOpponent({...opponent, nickname: player2_nickname, avatar: player2_avatar, });
             } else if (self_number == player2_number) {
-                mine.nickname = player2_nickname;
-				mine.avatar = player2_avatar;
-				opponent.nickname = player1_nickname;
-				opponent.avatar = player1_avatar;
+				console.log("self_number == player2_number");
+                // mine.nickname = player2_nickname;
+				// mine.avatar = player2_avatar;
+				// opponent.nickname = player1_nickname;
+				// opponent.avatar = player1_avatar;
                 setMine({ ...mine,nickname: player2_nickname,avatar: player2_avatar, });
                 setOpponent({ ...opponent,nickname: player1_nickname, avatar: player1_avatar,});
             }
-		}
         };
         socket?.on('current_player', current_player_handler);
 
@@ -192,7 +181,7 @@ export default function Grid() {
 
         return () => {
             socket?.off('current_player', current_player_handler);
-            socket?.off('player', player_handler);
+            
             socket?.off('host', host_handler);
             socket?.off('ready', ready_handler);
             socket?.off('start', start_handler);
@@ -203,10 +192,8 @@ export default function Grid() {
             socket?.off('submit_card', submit_card_handler);
             socket?.off('drop', drop_handler);
             socket?.off('connect', connect_handler);
-
-            socket?.disconnect();
         };
-    }, [self_number]);
+    }, [mine, opponent, turn, gameState, host, startable]);
 
     function tmp() {
         console.log(`tmp mine.nickname => ${mine.nickname}`);

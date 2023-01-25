@@ -13,23 +13,31 @@ class O {
 
 export default function Tmp() {
 	const [tmp, setTmp] = useState(new O())
-	const [socket, setSocket] = useState(null);
+	let socket;
+
+	useEffect(() => {
+		socket = io.connect("http://localhost:5000/tmp");
+		return () => {
+			socket.disconnect();
+		};
+	})
 
     useEffect(() => {
-		const socket2 = io.connect("http://localhost:5000/tmp");
-		setSocket(socket2);
 
-		socket2?.on("connect_to_name_change", (data) => {
+		const connect_to_name_change_handler = (data) => {
 			tmp.name = data.name;
 			setTmp({...tmp, name: data.name})
-		});
+		}
+		socket2?.on("connect_to_name_change", connect_to_name_change_handler);
 
-		socket2?.on("tmp", () => {
+		tmp_handler = () => {
 			console.log(`inside useEffect => ${tmp.name}`);
-		});
+		}
+		socket?.on("tmp", tmp_handler);
 
 		return () => {
-			socket2?.disconnect();
+			socket?.off("tmp", tmp_handler);
+			socket?.off("connect_to_name_change", connect_to_name_change_handler);
 		};
 		
 	}, []);

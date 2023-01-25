@@ -124,7 +124,6 @@ export class GameGateWay implements OnGatewayConnection, OnGatewayDisconnect {
 
 	@SubscribeMessage("submit_choice")
 	async submit_choice(@ConnectedSocket() client, @MessageBody("choice") choice) {
-		console.log("here is submit_choice");
 		let jwt = await this.checkValid(client);
 		try {
 			this.gameService.submitChoice(jwt["room"], client, choice);

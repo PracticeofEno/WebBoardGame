@@ -83,6 +83,7 @@ export class GameData {
 		else if (this.player1_card == 0 && this.player2_card == 3) {
 			return 1;
 		}
+
 		if (this.player1_card > this.player2_card)
 			return 1;
 		else if (this.player1_card < this.player2_card)
@@ -100,6 +101,10 @@ export class GameData {
 			return "fox";
 		else if (number == 3)
 			return "tiger";
+	}
+
+	isDropAble() : Boolean {
+		return this.players[this.turn - 1].drop;
 	}
 
 	isEndGame() : Boolean{
@@ -132,6 +137,7 @@ export class GameData {
 
 	processBattle() {
 		console.log("processBattle");
+		console.log(`player1-> ${this.players[0].submit_card} vs player2-> ${this.players[1].submit_card})`);
 		if (this.player1_token > this.player2_token) {
 			this.players[1].decreaseToken(this.player1_token - this.player2_token);
 			this.player2_token = this.player2_token + (this.player1_token - this.player2_token);
@@ -194,11 +200,22 @@ export class GameData {
 	}
 
 	processDrop() {
-		this.matchDraw();
-		this.sendMessage("drop", null);
-		this.roomState = GAME_STATE.FIRST_CARD_SELECT;
-		this.sendTurn();
-		console.log(`Process Drop`);
+		if (this.isDropAble()) {
+			this.players[this.turn - 1].drop = false;
+			this.matchDraw();
+			this.sendMessage("drop", {
+				player: this.turn
+			});
+			this.roomState = GAME_STATE.FIRST_CARD_SELECT;
+			this.sendTurn();
+			console.log(`Process Drop`);
+		}
+		else {
+			this.players[this.turn-1].socket.emit("error", {
+				message: "Can't drop Choice"
+			})
+		}
+		
 	}
 
 	processDouble() {
@@ -208,19 +225,19 @@ export class GameData {
 		else 
 			mount = this.player1_token;
 
-		let tf = this.players[this.turn].decreaseToken(mount * 2);
+		let tf = this.players[this.turn - 1].decreaseToken(mount * 2);
 		if (tf) {
 			if (this.turn == 1) 
 				this.player1_token = this.player1_token + (mount * 2);
 			else 
 				this.player2_token = this.player2_token + (mount * 2);
-			console.log(`player[${this.turn}}] submit token -> ${mount * 2}`);
+			console.log(`player[${this.turn - 1}}] submit token -> ${mount * 2}`);
 			this.roomState = GAME_STATE.THIRD_CHOICE_SELECT;
-			this.turn = (this.turn ? 0 : 1);
+			this.turn = (this.turn == 2 ? 1 : 2);
 			this.sendTurn();
 		}
 		else {
-			this.players[this.turn].socket.emit("error", { message: `따당 - 토큰이 부족합니다` })
+			this.players[this.turn - 1].socket.emit("error", { message: `따당 - 토큰이 부족합니다` })
 		}
 	}
 

@@ -51,6 +51,18 @@ export class AuthService {
 		}
 	}
 
+	async inviteLogin(user_id: string, password: string, room: string): Promise<string> {
+		let user = await this.validateUser(user_id, password);
+		if (user) {
+			let payload = { id : user.id, room: room, nickname: user.nickname, host: false};
+			const jwt = this.jwtService.sign(payload);
+			return jwt;
+		}
+		else {
+			throw new HttpException("인증 실패", 401);
+		}
+	}
+
 	async oauthLogin(access: string) {
 		let user;
 		let res;

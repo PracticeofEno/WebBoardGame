@@ -14,28 +14,28 @@ export class UserService {
     async findByUserId(user_id: string) : Promise<User>{
       const found = await this.userRepository.findByUserId(user_id);
       if (!found)
-        throw new HttpException("Not exist user_id", 400);
+        throw new HttpException("Not exist user_id", 404);
       return found
     }
 
 	async findById(id: number) : Promise<User>{
 		const found = await this.userRepository.findById(id);
 		if (!found)
-		  throw new HttpException("Not exist id", 400);
+		  throw new HttpException("Not exist id", 404);
 		return found
 	  }
 
 	async findByNickname(nickname: string) : Promise<User>{
 		const found = await this.userRepository.findByNickname(nickname);
 		if (!found)
-		  throw new HttpException("Not exist Nickname", 400);
+		  throw new HttpException("Not exist Nickname", 404);
 		return found
 	  }
 
     async addUser(id2:string, password:string) : Promise<User> {
       const found = await this.userRepository.findByUserId(id2);
       if (found)
-        throw new HttpException("Duplicate Nickname", 400);
+        throw new HttpException("Duplicate Nickname", 409);
       return await this.userRepository.addUser(id2, password);
     }
 

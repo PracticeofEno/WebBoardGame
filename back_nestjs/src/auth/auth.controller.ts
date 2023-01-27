@@ -44,6 +44,16 @@ export class AuthController {
     return await this.authService.login(id, password);
   }
 
+  @Post('/invite-login')
+  @ApiBody({
+    type: PostAddUser
+  })
+  @ApiOperation({ summary: '로그인', description: '성공시 유저id를 가진 jwt 반납' })
+  @ApiCreatedResponse({ description: 'JWT 토큰', type: String})
+  async inviteLogin(@Body('id') id, @Body('password') password, @Body('room') room) {
+    return await this.authService.inviteLogin(id, password, room);
+  }
+
   @Post('/oauth-login')
   @ApiBody({
     type: String,

@@ -11,7 +11,7 @@ export default function UserView({nickname2, src2}) {
 	})
 	return (
 		<div className={`relative w-full h-full flex flex-row justify-center`}>
-			<div className="flex relative w-1/5 h-full justify-center items-center">
+			<div className="flex flex-row relative w-1/5 h-full justify-center items-center">
 				<Image
         			src={avatar}
 					alt="x"
@@ -20,9 +20,10 @@ export default function UserView({nickname2, src2}) {
 					priority={true}
       			/>
 			</div>
-			<div className="flex relative w-3/5 h-full justify-center items-center text-7xl font-['alssu']">
-				{nickname}
+			<div className="flex relative w-1/5 h-full justify-center items-center text-7xl font-['alssu']">
+					{nickname}
 			</div>
+			
 		</div>
 	);
 }

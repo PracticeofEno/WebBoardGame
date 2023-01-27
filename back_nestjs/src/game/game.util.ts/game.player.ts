@@ -50,7 +50,6 @@ export class Player {
 
 	setCard(kind: string) : Boolean{
 		let myCount = this["" + kind];
-		console.log(`myCount = ${myCount}`);
 		if (myCount == 0) {
 			return false;
 		}

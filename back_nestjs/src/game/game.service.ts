@@ -171,9 +171,10 @@ export class GameService {
 	async tmp() {
 		console.log('kiki')
 		this.gameRepository.servers.map((value) => {
-			console.log(value.players[0]);
 			console.log("==================");
-			console.log(value.players[1]);
+			console.log(`${value.players[0].token} vs ${value.players[1].token}`);
+			console.log(`${value.player1_card} vs ${value.player2_card}`);
+			console.log("==================");
 		})
 	}
 }

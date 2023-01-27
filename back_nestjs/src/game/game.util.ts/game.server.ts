@@ -137,7 +137,7 @@ export class GameData {
 
 	processBattle() {
 		console.log("processBattle");
-		console.log(`player1-> ${this.players[0].submit_card} vs player2-> ${this.players[1].submit_card})`);
+		console.log(`player1-> ${this.player1_card} vs player2-> ${this.player2_card})`);
 		if (this.player1_token > this.player2_token) {
 			this.players[1].decreaseToken(this.player1_token - this.player2_token);
 			this.player2_token = this.player2_token + (this.player1_token - this.player2_token);
@@ -151,10 +151,12 @@ export class GameData {
 
 		let winner = this.getWinnerPlayerNumber();
 		console.log(`winner => ${winner}`);
-		let looser = (winner ? 0 : 1)
+		let looser = (winner == 2 ? 1 : 2)
 		let gamExist: Boolean = false;
-		if ((this.player1_card == 0 && this.player2_card == 3) || (this.player1_card == 3 && this.player2_card == 0))
+		if ((this.player1_card == 0 && this.player2_card == 3) || (this.player1_card == 3 && this.player2_card == 0)) {
 			gamExist = true;
+			console.log("===gam is exist===")
+		}
 		if (winner == 3) {
 			console.log("match draw");
 			this.sendMessage("result", {
@@ -166,12 +168,12 @@ export class GameData {
 		}
 		else {
 			if(gamExist) {
-				this.players[winner].increaseToken(this.gamAdventage);
-				this.players[looser].decreaseToken(this.gamAdventage);
+				this.players[winner - 1].increaseToken(this.gamAdventage);
+				this.players[looser - 1].decreaseToken(this.gamAdventage);
 				console.log(`gamExist`);
 			}
-			this.players[winner].increaseToken(this.player1_token);
-			this.players[winner].increaseToken(this.player2_token);
+			this.players[winner - 1].increaseToken(this.player1_token);
+			this.players[winner - 1].increaseToken(this.player2_token);
 			this.player1_token = 0;
 			this.player2_token = 0;
 			console.log(this.getStringWithCardNumber(this.player1_card))
@@ -180,7 +182,7 @@ export class GameData {
 				player1_card: this.getStringWithCardNumber(this.player1_card),
 				player2_card: this.getStringWithCardNumber(this.player2_card)
 			});
-			console.log(`Result Winner -> player[${winner}] -> card [${this.player1_card} vs ${this.player2_card}]`);
+			console.log(`Result Winner -> player[${winner - 1}] -> card [${this.player1_card} vs ${this.player2_card}]`);
 		}
 		if (this.players[0].isCardEmpty() == true || this.players[0].isTokenEmpty() == true) {
 			this.sendMessage("end", {
@@ -244,7 +246,6 @@ export class GameData {
 	Start(client: Socket) {
 		console.log(`try start room ${client.id == this.host.id}`);
 		if (this.roomState == GAME_STATE.READY && client.id == this.host.id) {
-			console.log("game.server");
 			let player1_dice = Math.floor((Math.random() * 6) + 1);
 			let player2_dice = Math.floor((Math.random() * 6) + 1);
 			while (player1_dice == player2_dice) {
@@ -298,7 +299,7 @@ export class GameData {
 			}
 		}
 		else {
-			client.emit("error", { message: `player${this.turn}번 님의 카드 선택 차례입니다` })
+			client.emit("error", { message: `${this.players[this.turn - 1].nickname} 님의 카드 선택 차례입니다` })
 			return false;
 		}
 	}
@@ -331,7 +332,7 @@ export class GameData {
 			}
 		}
 		else {
-			client.emit("error", { message: `player${this.turn}번 님의 카드 선택 차례입니다` })
+			client.emit("error", { message: `${this.players[this.turn - 1].nickname} 님의 토큰 제출 차례입니다` })
 			return false;
 		}
 	}
@@ -356,7 +357,7 @@ export class GameData {
 			}
 		}
 		else {
-			client.emit("error", { message: `player${this.turn}번 님의 선택 차례입니다` })
+			client.emit("error", { message: `${this.players[this.turn - 1].nickname} 님의 결정 차례입니다` })
 		}
 	}
 

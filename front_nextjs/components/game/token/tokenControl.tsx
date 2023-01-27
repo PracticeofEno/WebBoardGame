@@ -4,7 +4,7 @@ import TokenView from "./tokenView";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 
-export default function TokenControl({socket}) {
+export default function TokenControl({socket, }) {
 
 	const array = ["3", "4", "5", "6", "7", "8", "9"];
 	const defaultOption = array[0];

@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useRef  } from 'react';
 import { Player, GAME_STATE } from '../utils/player';
 import UserView from '../components/game/user/UserView';
 import CardView from '../components/game/card/CardView';
@@ -17,7 +17,7 @@ let socket;
 export default function Grid() {
     const [host, setHost] = useState(false); // 방장 여부
     const [startable, setStartable] = useState(false); // 게임 시작 가능 여부
-    const [self_number, setSelfNumber] = useState(999); // 방에서 자신의 번호
+    const self_number = useRef(999);
     const [turn, setTurn] = useState(-1); //
     const [gameState, setGameState] = useState(GAME_STATE.READY); // 게임 상태
 
@@ -40,36 +40,47 @@ export default function Grid() {
                     },
                 },
             },
-        });
+        }, );
+		return () => {
+			socket?.disconnect();
+        };
+	}, [])
+
+
+	useEffect(() => {
 		const player_handler = message => {
-			console.log("set self_number -> message");
-            setSelfNumber(message);
+			console.log(`set self_number.current -> ${message}`);
+            self_number.current = message;
         };
         socket?.on('player', player_handler);
-
 		return () => {
 			socket?.off('player', player_handler);
-            socket?.disconnect();
         };
-	}, [self_number])
+	}, []);
+
+	useEffect(() => {
+		const current_player_handler = ({ player1_number, player1_nickname,  player1_avatar, player2_nickname, player2_avatar,player2_number,}) => {
+			console.log(`self_number.current -> ${self_number.current}`);
+            if (self_number.current == player1_number) {
+                setMine({ ...mine, nickname: player1_nickname, avatar: player1_avatar, });
+                setOpponent({...opponent, nickname: player2_nickname, avatar: player2_avatar, });
+            } else if (self_number.current == player2_number) {
+                setMine({ ...mine,nickname: player2_nickname,avatar: player2_avatar, });
+                setOpponent({ ...opponent,nickname: player1_nickname, avatar: player1_avatar,});
+            }
+        };
+        socket?.on('current_player', current_player_handler);
+
+		return () => {
+			socket?.off('current_player', current_player_handler);
+        };
+	}, [mine, opponent])
 
     useEffect(() => {
         const connect_handler = () => {
             console.log('socket connect');
         };
         socket?.on('connect', connect_handler);
-
-        const current_player_handler = ({ player1_number, player1_nickname,  player1_avatar, player2_nickname, player2_avatar,player2_number,}) => {
-			console.log("aaa");
-            if (self_number == player1_number) {
-                setMine({ ...mine, nickname: player1_nickname, avatar: player1_avatar, });
-                setOpponent({...opponent, nickname: player2_nickname, avatar: player2_avatar, });
-            } else if (self_number == player2_number) {
-                setMine({ ...mine,nickname: player2_nickname,avatar: player2_avatar, });
-                setOpponent({ ...opponent,nickname: player1_nickname, avatar: player1_avatar,});
-            }
-        };
-        socket?.on('current_player', current_player_handler);
 
         const host_handler = message => {
             setHost(true);
@@ -118,13 +129,13 @@ export default function Grid() {
         const start_game_handler = data => {
 			let tmp;
 			if (data.player1 > data.player2) {
-				if (self_number == 1) 
+				if (self_number.current == 1) 
 					tmp = mine.nickname;
 				else
 					tmp = opponent.nickname
 			}
 			else {
-				if (self_number == 1) 
+				if (self_number.current == 1) 
 					tmp = opponent.nickname;
 				else
 					tmp = mine.nickname
@@ -146,28 +157,42 @@ export default function Grid() {
         //결과 나왔을때
         const result_handler = data => {
             console.log(data);
-            if (self_number == 1) {
+            if (self_number.current == 1) {
                 mine.submit_cards.push(data.player1_card);
                 opponent.submit_cards.push(data.player2_card);
 				setMyResult(data.player1_card);
 				setOppoResult(data.player2_card);
 				setWinResult(data.winner);
-            } else {
+            } 
+			else {
                 mine.submit_cards.push(data.player2_card);
                 opponent.submit_cards.push(data.player1_card);
 				setMyResult(data.player2_card);
 				setOppoResult(data.player1_card);
 				setWinResult(data.winner);
             }
+
+			if (data.winner == 3) {
+				mine.token = mine.token + (Number(data.token) / 2);
+				opponent.token = opponent.token + (Number(data.token) / 2);
+			}
+			else if (data.winner == self_number.current) {
+				mine.token = mine.token + (Number(data.token));
+			}
+			else {
+				opponent.token = opponent.token + (Number(data.token));
+			}
             setMine({
                 ...mine,
                 submit_card: '',
                 submit_cards: mine.submit_cards,
+				token: mine.token
             });
             setOpponent({
                 ...opponent,
                 submit_card: '',
                 submit_cards: opponent.submit_cards,
+				token: opponent.token
             });
 			setResultOpen(true);
 			
@@ -175,7 +200,7 @@ export default function Grid() {
         socket?.on('result', result_handler);
 
         const submit_card_handler = data => {
-            if (data.player_number == self_number) {
+            if (data.player_number == self_number.current) {
                 let tmp = mine;
                 tmp['' + data.kind] = tmp['' + data.kind] - 1;
                 setMine({ ...mine, tiger: tmp.tiger,  fox: tmp.fox,  rabbit: tmp.rabbit, gam: tmp.gam, submit_card: data.kind, });
@@ -188,8 +213,9 @@ export default function Grid() {
         socket?.on('submit_card', submit_card_handler);
 
         const drop_handler = (data) => {
-			if (data.player == self_number) {
+			if (data.player == self_number.current) {
 				mine.drop = false;
+				opponent.token = opponent.token + data.token;
 			}
             mine.submit_cards.push("back");
             opponent.submit_cards.push("back");
@@ -203,12 +229,29 @@ export default function Grid() {
                 ...opponent,
                 submit_card: '',
                 submit_cards: opponent.submit_cards,
+				token : opponent.token
             });
         };
         socket?.on('drop', drop_handler);
 
+		const submit_token_handler = (data) => {
+			console.log("submit_token_event_handler");
+			console.log(data);
+			console.log(data.player_number);
+			console.log(self_number.current);
+			console.log(data.player_number == self_number.current)
+			if (data.player_number == self_number.current) {
+                let tmp = mine.token - data.count;
+                setMine({ ...mine, token: tmp});
+            } else {
+                opponent.token = opponent.token - data.count;
+                setOpponent({ ...opponent, token: opponent.token });
+            }
+        };
+        socket?.on('submit_token', submit_token_handler);
+
         return () => {
-            socket?.off('current_player', current_player_handler);
+            // socket?.off('current_player', current_player_handler);
             socket?.off('host', host_handler);
             socket?.off('ready', ready_handler);
             socket?.off('start', start_handler);
@@ -219,12 +262,13 @@ export default function Grid() {
             socket?.off('submit_card', submit_card_handler);
             socket?.off('drop', drop_handler);
             socket?.off('connect', connect_handler);
+			socket?.off('submit_token', submit_token_handler);
         };
     }, [mine, opponent, turn, gameState, host, startable]);
 
     function tmp() {
         console.log(`tmp mine.nickname => ${mine.nickname}`);
-        console.log(`self_number is => ${self_number}`);
+        console.log(`self_number.current is => ${self_number.current}`);
     }
 
     function start() {
@@ -238,7 +282,7 @@ export default function Grid() {
 				{ modalContent }
 			</AlertModal>
 			<ResultModal isOpen={resultOpen} closeFunction={() => setResultOpen(false)}>
-				<ResultContent card_1={oppoResult} card_2={myResult} winner={winResult} self_number={self_number} closeFunction={() => setResultOpen(false)}/>
+				<ResultContent card_1={oppoResult} card_2={myResult} winner={winResult} self_number={self_number.current} closeFunction={() => setResultOpen(false)}/>
 			</ResultModal>
 			
             <div className="a border-2 border-red-100">
@@ -274,7 +318,7 @@ export default function Grid() {
             </div>
             <div className="f">
                 {
-					(turn == self_number) && (gameState == GAME_STATE.SECOND_CHOICE || gameState == GAME_STATE.THIRD_CHOICE_SELECT) && (
+					(turn == self_number.current) && (gameState == GAME_STATE.SECOND_CHOICE || gameState == GAME_STATE.THIRD_CHOICE_SELECT) && (
                         <Choise socket={socket} gameState={gameState} drop={mine.drop}/>
                     )
 				}
@@ -291,7 +335,7 @@ export default function Grid() {
             </div>
             <div className="j flex justify-center items-center">
 				{
-					(gameState > 0) && <p className='font-alssu text-9xl'>x{opponent.token}</p>
+					(gameState > 0) && <p className='font-alssu text-9xl'>x{mine.token}</p>
 				}
             </div>
             <div className="l">
@@ -299,7 +343,7 @@ export default function Grid() {
             </div>
 			<div className="k">
 				{
-					(turn == self_number && gameState == GAME_STATE.FIRST_MONEY_SELECT) && (
+					(turn == self_number.current && gameState == GAME_STATE.FIRST_MONEY_SELECT) && (
 						<TokenControl socket={socket}/>
 					)
 				}

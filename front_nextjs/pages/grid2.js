@@ -8,7 +8,9 @@ import Cookies from 'js-cookie';
 import TokenControl from '../components/game/token/tokenControl';
 import Battle from '../components/game/battle/battle';
 import Choise from '../components/game/battle/choise';
-import { MiddlewareNotFoundError } from 'next/dist/shared/lib/utils';
+import AlertModal from "../components/modal/AlterModal";
+import ResultContent from "../components/game/battle/result";
+import ResultModal from "../components/modal/ResultModal";
 
 let socket;
 
@@ -22,9 +24,15 @@ export default function Grid() {
     const [mine, setMine] = useState(new Player()); //자신 데이터
     const [opponent, setOpponent] = useState(new Player()); //상대 데이터
 
+	const [modalOpen, setModalOpen] = useState(false);
+	const [modalContent, setModalContent] = useState();
+	const [resultOpen, setResultOpen] = useState(false);
 
-	useEffect(() => {
-		socket = io.connect('http://localhost:5000/game', {
+	const [myResult, setMyResult] = useState();
+	const [oppoResult, setOppoResult] = useState();
+	const [winResult, setWinResult] = useState();
+	useEffect( () => {
+		socket = io.connect('http://119.194.118.155:5000/game', {
             transportOptions: {
                 polling: {
                     extraHeaders: {
@@ -54,19 +62,9 @@ export default function Grid() {
         const current_player_handler = ({ player1_number, player1_nickname,  player1_avatar, player2_nickname, player2_avatar,player2_number,}) => {
 			console.log("aaa");
             if (self_number == player1_number) {
-				console.log("self_number == player1_number");
-                // mine.nickname = player1_nickname;
-				// mine.avatar = player1_avatar;
-				// opponent.nickname = player2_nickname;
-				// opponent.avatar = player2_avatar;
                 setMine({ ...mine, nickname: player1_nickname, avatar: player1_avatar, });
                 setOpponent({...opponent, nickname: player2_nickname, avatar: player2_avatar, });
             } else if (self_number == player2_number) {
-				console.log("self_number == player2_number");
-                // mine.nickname = player2_nickname;
-				// mine.avatar = player2_avatar;
-				// opponent.nickname = player1_nickname;
-				// opponent.avatar = player1_avatar;
                 setMine({ ...mine,nickname: player2_nickname,avatar: player2_avatar, });
                 setOpponent({ ...opponent,nickname: player1_nickname, avatar: player1_avatar,});
             }
@@ -99,11 +97,13 @@ export default function Grid() {
         });
 
         socket?.on('error', data => {
-            console.log(`error : ${data.message}`);
+			setModalContent(data.message);
+			setModalOpen(true);
         });
 
         const start_handler = data => {
             setGameState(true);
+			
             console.log('game start');
         };
         socket?.on('start', start_handler);
@@ -116,7 +116,23 @@ export default function Grid() {
         socket?.on('turn', turn_handler);
 
         const start_game_handler = data => {
+			let tmp;
+			if (data.player1 > data.player2) {
+				if (self_number == 1) 
+					tmp = mine.nickname;
+				else
+					tmp = opponent.nickname
+			}
+			else {
+				if (self_number == 1) 
+					tmp = opponent.nickname;
+				else
+					tmp = mine.nickname
+			}
             setGameState(GAME_STATE.FIRST_CARD_SELECT);
+			setModalContent(`first turn is ${tmp}  --> ${data.player1} vs ${data.player2}`);
+			setModalOpen(true);
+			setStartable(false);
             console.log('game start');
         };
         socket?.on('start_game', start_game_handler);
@@ -133,9 +149,15 @@ export default function Grid() {
             if (self_number == 1) {
                 mine.submit_cards.push(data.player1_card);
                 opponent.submit_cards.push(data.player2_card);
+				setMyResult(data.player1_card);
+				setOppoResult(data.player2_card);
+				setWinResult(data.winner);
             } else {
                 mine.submit_cards.push(data.player2_card);
                 opponent.submit_cards.push(data.player1_card);
+				setMyResult(data.player2_card);
+				setOppoResult(data.player1_card);
+				setWinResult(data.winner);
             }
             setMine({
                 ...mine,
@@ -147,6 +169,8 @@ export default function Grid() {
                 submit_card: '',
                 submit_cards: opponent.submit_cards,
             });
+			setResultOpen(true);
+			
         };
         socket?.on('result', result_handler);
 
@@ -203,12 +227,20 @@ export default function Grid() {
         console.log(`self_number is => ${self_number}`);
     }
 
-    function tmp2() {
+    function start() {
         socket.emit('start', null);
     }
 
+
     return (
         <div className="wrapper">
+			<AlertModal isOpen={modalOpen} closeFunction={() => setModalOpen(false)}>
+				{ modalContent }
+			</AlertModal>
+			<ResultModal isOpen={resultOpen} closeFunction={() => setResultOpen(false)}>
+				<ResultContent card_1={oppoResult} card_2={myResult} winner={winResult} self_number={self_number} closeFunction={() => setResultOpen(false)}/>
+			</ResultModal>
+			
             <div className="a border-2 border-red-100">
                 <Grave
                     cards1={mine.submit_cards}
@@ -222,17 +254,14 @@ export default function Grid() {
                     src2={opponent.avatar}
                 />
             </div>
-            <div className="c">
-                {self_number}
-                Token Count
-                <button onClick={tmp} className="bg-gray-400">
-                    aa
-                </button>
+            <div className="c flex justify-center items-center">
+				{
+					(gameState > 0) && <p className='font-alssu text-9xl'>x{opponent.token}</p>
+				}
             </div>
-            <div className="d">Navi Var</div>
-            <div className="e bg-battle bg-cover bg-center bg-no-repeat ">
+            <div className="e flex bg-battle bg-cover bg-center bg-no-repeat justify-center items-center">
                 {host && startable && (
-                    <button onClick={tmp2} className="bg-red-400">
+                    <button onClick={start} className="bg-red-400 w-[5rem] h-[3rem] border-2 border-black">
                         start
                     </button>
                 )}
@@ -250,7 +279,6 @@ export default function Grid() {
                     )
 				}
             </div>
-            <div className="g">chatting tab</div>
             <div className="i flex flex-row justify-center items-center">
                 <CardView
                     tiger={mine.tiger}
@@ -261,28 +289,38 @@ export default function Grid() {
                     socket={socket}
                 />
             </div>
-            <div className="j">
-                {turn == self_number &&
-                    gameState == GAME_STATE.FIRST_MONEY_SELECT && (
-                        <TokenControl socket={socket} />
-                    )}
+            <div className="j flex justify-center items-center">
+				{
+					(gameState > 0) && <p className='font-alssu text-9xl'>x{opponent.token}</p>
+				}
             </div>
             <div className="l">
                 <UserView nickname2={mine.nickname} src2={mine.avatar} />
+            </div>
+			<div className="k">
+				{
+					(turn == self_number && gameState == GAME_STATE.FIRST_MONEY_SELECT) && (
+						<TokenControl socket={socket}/>
+					)
+				}
             </div>
             <style jsx>{`
                 .wrapper {
                     display: grid;
                     width: 100vw;
                     height: 100vh;
-                    grid-template-columns: repeat(10, 1fr);
+                    grid-template-columns: repeat(8, 1fr);
                     grid-template-rows: 0.5fr 0.5fr 1.5fr 1fr 0.5fr;
                     grid-template-areas:
-                        'b b b b b b b c d d'
-                        'a e e e e e e f g g'
-                        'a e e e e e e f g g'
-                        'i i i i i i i j g g'
-                        'l l l l l l l j g g';
+                        'b b b b b b b c'
+                        'a e e e e e e f'
+                        'a e e e e e e f'
+                        'i i i i i i i k'
+                        'l l l l l l l j';
+                }
+
+				.k {
+                    grid-area: k;
                 }
 
                 .a {
@@ -303,17 +341,11 @@ export default function Grid() {
                 .f {
                     grid-area: f;
                 }
-                .g {
-                    grid-area: g;
-                }
                 .i {
                     grid-area: i;
                 }
                 .j {
                     grid-area: j;
-                }
-                .k {
-                    grid-area: k;
                 }
                 .l {
                     grid-area: l;

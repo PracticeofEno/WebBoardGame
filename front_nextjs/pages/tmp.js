@@ -1,57 +1,22 @@
-import { data } from 'autoprefixer';
-import { useEffect } from 'react';
 import { useState } from 'react';
-import io from "socket.io-client";
-
-class O {
-	name;
-
-	constructor() {
-		this.name = "this is constructor"
-	}
-};
+import AlterModal from "../components/modal/AlterModal";
+import ResultContent from "../components/game/battle/result";
+import ResultModal from "../components/modal/ResultModal";
 
 export default function Tmp() {
-	const [tmp, setTmp] = useState(new O())
-	let socket;
+    const [modalIsOpen, setModalIsOpen] = useState(true);
+	const [modalContent, setModalContent] = useState("awef");
 
-	useEffect(() => {
-		socket = io.connect("http://localhost:5000/tmp");
-		return () => {
-			socket.disconnect();
-		};
-	})
-
-    useEffect(() => {
-
-		const connect_to_name_change_handler = (data) => {
-			tmp.name = data.name;
-			setTmp({...tmp, name: data.name})
-		}
-		socket2?.on("connect_to_name_change", connect_to_name_change_handler);
-
-		tmp_handler = () => {
-			console.log(`inside useEffect => ${tmp.name}`);
-		}
-		socket?.on("tmp", tmp_handler);
-
-		return () => {
-			socket?.off("tmp", tmp_handler);
-			socket?.off("connect_to_name_change", connect_to_name_change_handler);
-		};
-		
-	}, [tmp]);
-
-	function tmp2() {
-		console.log(`outside useEffect => ${tmp.name}`);
-		socket?.emit("tmp", null);
+	function tmp () {
+		setModalIsOpen(false);
 	}
 
+
     return (
-        <div className="flex w-full h-full justify-start bg-gray-400 flex-row">
-            <div className="flex w-[12rem] h-[40rem] bg-pink-400">
-                <button onClick={tmp2}> haha </button>
-            </div>
+        <div className="flex w-full h-full justify-center items-center">
+			<ResultModal isOpen={modalIsOpen} closeFunction={tmp}>
+				<ResultContent card_1={"tiger"} card_2={"rabbit"} win={false} closeFunction={tmp}/>
+			</ResultModal>
         </div>
     );
 }

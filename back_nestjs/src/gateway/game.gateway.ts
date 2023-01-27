@@ -79,20 +79,6 @@ export class GameGateWay implements OnGatewayConnection, OnGatewayDisconnect {
 		}
 	}
 
-	@SubscribeMessage("create_game")
-	async createGameRoom(@ConnectedSocket() client) {
-		let jwt: any = await this.checkValid(client);
-		try {
-			console.log(`connected nickname = ${jwt["nickname"]} in ${jwt["room"]}`);
-			await this.gameService.createGame(jwt["room"]);
-			this.gameService.joinRoom(jwt, client);
-			client.join(jwt["room"]);
-		}
-		catch {
-			console.log('handle connection error');
-		}
-	}
-
 	@SubscribeMessage("start")
 	async Start(@ConnectedSocket() client) {
 		let jwt = await this.checkValid(client);

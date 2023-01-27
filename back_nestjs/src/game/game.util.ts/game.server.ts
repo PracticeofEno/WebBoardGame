@@ -137,16 +137,26 @@ export class GameData {
 
 	processBattle() {
 		console.log("processBattle");
-		console.log(`player1-> ${this.player1_card} vs player2-> ${this.player2_card})`);
+		console.log(`player[0]-> ${this.player1_token} vs player[1]-> ${this.player2_token})`);
 		if (this.player1_token > this.player2_token) {
-			this.players[1].decreaseToken(this.player1_token - this.player2_token);
-			this.player2_token = this.player2_token + (this.player1_token - this.player2_token);
-			console.log(`player[2] submit token ${this.player1_token - this.player2_token}`);
+			let token = this.player1_token - this.player2_token;
+			this.players[1].decreaseToken(token);
+			this.player2_token = this.player2_token + (token);
+			this.sendMessage("submit_token", {
+				player_number: 2,
+				count: token
+			})
+			console.log(`player[1] submit token ${this.player1_token - this.player2_token}`);
 		}
 		else if (this.player1_token < this.player2_token) {
-			this.players[0].decreaseToken(this.player2_token - this.player1_token);
-			this.player1_token = this.player1_token + (this.player2_token - this.player1_token);
-			console.log(`player[1] submit token ${this.player1_token - this.player2_token}`);
+			let token = this.player2_token - this.player1_token;
+			this.players[0].decreaseToken(token);
+			this.player1_token = this.player1_token + token;
+			this.sendMessage("submit_token", {
+				player_number: 1,
+				count: token
+			})
+			console.log(`player[0] submit token ${token}`);
 		}
 
 		let winner = this.getWinnerPlayerNumber();
@@ -162,7 +172,8 @@ export class GameData {
 			this.sendMessage("result", {
 				winner: winner,
 				player1_card: this.getStringWithCardNumber(this.player1_card),
-				player2_card: this.getStringWithCardNumber(this.player2_card)
+				player2_card: this.getStringWithCardNumber(this.player2_card),
+				token: this.player1_token + this.player2_token
 			});
 			this.matchDraw();
 		}
@@ -174,14 +185,14 @@ export class GameData {
 			}
 			this.players[winner - 1].increaseToken(this.player1_token);
 			this.players[winner - 1].increaseToken(this.player2_token);
-			this.player1_token = 0;
-			this.player2_token = 0;
-			console.log(this.getStringWithCardNumber(this.player1_card))
 			this.sendMessage("result", {
 				winner: winner,
 				player1_card: this.getStringWithCardNumber(this.player1_card),
-				player2_card: this.getStringWithCardNumber(this.player2_card)
+				player2_card: this.getStringWithCardNumber(this.player2_card),
+				token: this.player1_token + this.player2_token
 			});
+			this.player1_token = 0;
+			this.player2_token = 0;
 			console.log(`Result Winner -> player[${winner - 1}] -> card [${this.player1_card} vs ${this.player2_card}]`);
 		}
 		if (this.players[0].isCardEmpty() == true || this.players[0].isTokenEmpty() == true) {
@@ -203,11 +214,15 @@ export class GameData {
 
 	processDrop() {
 		if (this.isDropAble()) {
+			let token = (this.turn == 2 ? this.player1_token : this.player2_token);
+			console.log(token);
 			this.players[this.turn - 1].drop = false;
-			this.matchDraw();
 			this.sendMessage("drop", {
-				player: this.turn
+				player: this.turn,
+				token: token
 			});
+			this.matchDraw();
+			
 			this.roomState = GAME_STATE.FIRST_CARD_SELECT;
 			this.sendTurn();
 			console.log(`Process Drop`);
@@ -311,7 +326,7 @@ export class GameData {
 					count = this.getMaxToken();
 				}
 				if (this.players[this.turn - 1].decreaseToken(count)) {
-					console.log(`${this.turn} player submit token : ${count}`);
+					console.log(`player[${this.turn - 1}] submit token : ${count}`);
 					this.roomState = GAME_STATE.SECOND_CARD_SELECT;
 					if (this.turn == 1)
 						this.player1_token = Number(this.player1_token + count);

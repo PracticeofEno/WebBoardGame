@@ -24,17 +24,15 @@ export default function TokenControl({socket}) {
 	}
 
 	return (
-		<div className="flex relative w-full h-full flex-col justify-center items-center border-2 border-gray-100">
-			<div className="flex flex-col w-full h-1/3 bg-blue-300">
+		<div className="flex relative w-full h-full flex-col justify-center items-center border-2 border-black-100">
+			<div className="w-4/5 h-1/4 ">
 				<Dropdown options={array} onChange={valueChange} value={defaultOption} placeholder="Select an option" />
-				<div className="flex h-1/3 w-full border-2 border-gray-300 justify-center">
-					<button onClick={submitToken} className="w-1/2 h-full bg-gray-200 border-2 border-black justify-center">제출</button>
+			</div>
+				
+				<div className="flex h-1/4 w-4/5 justify-center border-2 border-black rounded">
+					<button onClick={submitToken} className="w-full h-full bg-gray-200  justify-center">제출</button>
 				</div>
-			</div>
-			<div className="w-full h-1/3 bg-pink-300">
-				<TokenView gold={50} />
-			</div>
-			<div className="w-full h-1/3 bg-red-300"></div>
+
 			<style jsx>{`
 			`}</style>
 		</div>

@@ -30,13 +30,13 @@ export default function Card({ name }) {
 	return (
 		<div className="w-full h-full relative">
 			{
-				(idx == 4 || idx == -1) && <img src="/images/back.svg" alt="" className="absolute w-full h-full px-2" />
+				(idx == 4 || idx == -1) && <img src="/images/back.svg" alt="" className="absolute w-full h-full px-2 " />
 			}
 			{
-				(idx != 4 && idx != -1) && <img src="/images/card_template.svg" alt="" className="absolute w-full h-full" />
+				(idx != 4 && idx != -1) && <img src="/images/card_template.svg" alt="" className="absolute w-full h-full " />
 			}
 			{
-				(idx != 4 && idx != -1) && <img src={tmp[idx].src} alt="" className="ImgCharacter" />
+				(idx != 4 && idx != -1) && <img src={tmp[idx].src} alt="" className="ImgCharacter " />
 			}
 			<style jsx>{`
 			.ImgCharacter {
@@ -44,7 +44,7 @@ export default function Card({ name }) {
 				height: 65%;
   				position: absolute;
   				top: 8%;
-  				left: 16%;siveri
+  				left: 16%;
 			}
 
 			.CardTitle {

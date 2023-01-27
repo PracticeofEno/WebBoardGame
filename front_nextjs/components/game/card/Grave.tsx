@@ -19,13 +19,12 @@ export default function Grave({cards1, cards2, state}) {
 			</div>
 			{
 				(visible && state > 0) && (
-					<div className="absolute w-[550%] h-2/3 left-[10.5vw] bg-gray-400 cardBox flex-col">
-						<div className="flex flex-row relaitve w-[100%] h-[50%] bg-pink-200 justify-start">
+					<div className="absolute w-[550%] h-2/3 left-[13vw] bg-gray-400 cardBox flex-col z-50 bg-opacity-50">
+						<div className="flex flex-row relaitve w-[100%] h-[50%] justify-start">
 							{
 								player1Cards.map((value, index) => {
-									console.log(value);
 									return (
-										(value.length > 0)  && (<div key={index} className="w-[11%] h-full bg-gray-400">
+										(value.length > 0)  && (<div key={index} className="w-[11%] h-full bg-gray-400 bg-opacity-50">
 											<GraveCard key={index} name={value} />
 										</div>)
 									)
@@ -33,12 +32,11 @@ export default function Grave({cards1, cards2, state}) {
 							}
 
 						</div>
-						<div className="flex flex-row relaitve w-[100%] h-[50%] bg-blue-200">
+						<div className="flex flex-row relaitve w-[100%] h-[50%] ">
 						{
 								player2Cards.map((value, index) => {
-									console.log(value);
 									return (
-										(value.length > 0)  && (<div key={index} className="w-[11%] h-full bg-gray-400">
+										(value.length > 0)  && (<div key={index} className="w-[11%] h-full bg-gray-400 bg-opacity-50">
 											<GraveCard key={index} name={value} />
 										</div>)
 									)

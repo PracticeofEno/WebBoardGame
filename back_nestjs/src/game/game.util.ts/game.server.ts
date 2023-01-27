@@ -243,6 +243,10 @@ export class GameData {
 			mount = this.player1_token;
 
 		let tf = this.players[this.turn - 1].decreaseToken(mount * 2);
+		this.sendMessage("submit_token", {
+			player_number: this.turn,
+			count: mount * 2
+		})
 		if (tf) {
 			if (this.turn == 1) 
 				this.player1_token = this.player1_token + (mount * 2);

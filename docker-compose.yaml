@@ -1,0 +1,47 @@
+version: "3.8"
+services:
+  42-postgres:
+    container_name: postgres
+    image: postgres:42
+    build: ./database
+    ports:
+      - "5432:5432"
+    volumes:
+      - psql:/var/lib/postgresql/data
+    networks:
+      - my_network
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=test
+
+  42-backend:
+    container_name: backend
+    image: backend:42
+    build: ./back_nestjs
+    ports:
+      - "5000:5000"
+    networks:
+      - my_network
+    depends_on:
+      - 42-postgres
+
+  42-frontend:
+    container_name: frontend
+    image: frontend:42
+    build: ./front_nextjs
+    ports:
+      - "3000:3000"
+    networks:
+      - my_network
+    depends_on:
+      - 42-backend
+
+networks:
+  my_network:
+    name: my_network
+    driver: bridge
+
+volumes:
+  psql:
+    name: psql

@@ -22,7 +22,7 @@ export default function LoginUI() {
 			console.log("회원가입 성공");
 		}
 		catch (e) {
-			setModalContent("이미 있는 회원임");
+			setModalContent("회원등록 실패(중복 or 빈칸상태)");
 			setModalOpen(true);
 			setNickname("");
 			setPassword("");
@@ -100,7 +100,7 @@ export default function LoginUI() {
 				</button>
 
 				<button onClick={apiAddUser} className="button w-2/5 h-full rounded-2xl">
-					회원 가입
+					회원 등록
 				</button>
 			</div>
 

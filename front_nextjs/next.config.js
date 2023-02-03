@@ -3,13 +3,12 @@ const rewrites = async () => {
   return [
     {
       source: "/api/:path*",
-      destination: "http://119.194.118.155:5000/:path*",
+      destination: `${process.env.NEXT_PUBLIC_BACKEND}/:path*`,
     },
   ];
 };
 
 module.exports = {
-  reactStrictMode: false,
   images: {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

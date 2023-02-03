@@ -32,7 +32,7 @@ export default function Grid() {
 	const [oppoResult, setOppoResult] = useState();
 	const [winResult, setWinResult] = useState();
 	useEffect( () => {
-		socket = io.connect('http://119.194.118.155:5000/game', {
+		socket = io.connect(`${process.env.NEXT_PUBLIC_BACKEND}/game`, {
             transportOptions: {
                 polling: {
                     extraHeaders: {

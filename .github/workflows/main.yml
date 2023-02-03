@@ -32,5 +32,7 @@ jobs:
       
     - name: zip file
       run: |
-        ls
+        ls -al
+        pwd
+        cd build
         pwd

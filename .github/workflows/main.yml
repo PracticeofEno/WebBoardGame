@@ -32,16 +32,5 @@ jobs:
       
     - name: zip file
       run: |
-        ls -al
-        pwd
-        cd build
-        pwd
-        ls
-        cd ..
-        cd ..
-        pwd
-        ls
-        cd ..
-        pwd
-        ls
+        zip -r my-repo.zip .
         

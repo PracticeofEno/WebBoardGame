@@ -31,4 +31,6 @@ jobs:
         bucket-region: ${{ secrets.AWS_REGION }}
       
     - name: zip file
-      run: ls
+      run: |
+        ls
+        pwd

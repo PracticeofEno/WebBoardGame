@@ -29,3 +29,9 @@ jobs:
         folder: build
         bucket: ${{ secrets.S3_BUCKET }}
         bucket-region: ${{ secrets.AWS_REGION }}
+      
+    - name: zip file
+      run: zip -r test.zip ./back_nestjs ./front_nextjs ./database ./scripts ./appspec.yml ./docker-compose.yaml
+      
+    - name: upload to S3
+      run: aws s3 cp --region ap-northeast-2 ./test.zip s3://eno-codedeploydemobucket/

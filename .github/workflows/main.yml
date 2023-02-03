@@ -37,3 +37,7 @@ jobs:
         cd build
         pwd
         ls
+        cd ..
+        cd ..
+        pwd
+        ls

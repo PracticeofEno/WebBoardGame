@@ -41,4 +41,4 @@ jobs:
         --application-name deploy-test
         --deployment-config-name CodeDeployDefault.OneAtATime
         --deployment-group-name deploy-group
-        --s3-location bucket=eno-codedeploydemobucket,bundleType=zip,key=Name
+        --s3-location bucket=eno-codedeploydemobucket,bundleType=zip,key=my-repo.zip

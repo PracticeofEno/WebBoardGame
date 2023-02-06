@@ -56,13 +56,13 @@ jobs:
       run: |
         zip -r my-repo.zip ./back_nestjs/dist ./front_nextjs/dist ./scripts ./appspec.yml ./docker-compose.yaml
         
-#     - name: upload to S3
-#       run: aws s3 cp --region ap-northeast-2 ./my-repo.zip s3://eno-codedeploydemobucket/
+    - name: upload to S3
+      run: aws s3 cp --region ap-northeast-2 ./my-repo.zip s3://eno-codedeploydemobucket/
       
       
-#     - name: deploy with AWS codeDeploy
-#       run: aws deploy create-deployment
-#         --application-name deploy-test
-#         --deployment-config-name CodeDeployDefault.OneAtATime
-#         --deployment-group-name deploy-group
-#         --s3-location bucket=eno-codedeploydemobucket,bundleType=zip,key=my-repo.zip
+    - name: deploy with AWS codeDeploy
+      run: aws deploy create-deployment
+        --application-name deploy-test
+        --deployment-config-name CodeDeployDefault.OneAtATime
+        --deployment-group-name deploy-group
+        --s3-location bucket=eno-codedeploydemobucket,bundleType=zip,key=my-repo.zip

@@ -46,11 +46,11 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
   
-    - name: Deploy to AWS
-      uses: reggionick/s3-deploy@v3
-      with:
-        bucket: ${{ secrets.S3_BUCKET }}
-        bucket-region: ${{ secrets.AWS_REGION }}
+#     - name: Deploy to AWS
+#       uses: reggionick/s3-deploy@v3
+#       with:
+#         bucket: ${{ secrets.S3_BUCKET }}
+#         bucket-region: ${{ secrets.AWS_REGION }}
       
     - name: zip file
       run: |

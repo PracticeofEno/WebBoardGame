@@ -19,26 +19,6 @@ jobs:
     - name: Checkout 
       uses: actions/checkout@v3
     
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    
-    - name: backend Build
-      run: |
-        cd back_nestjs
-        npm ci
-        npm run build
-        ls
-        cd ..
-        
-    - name: front Build
-      run: |
-        cd front_nextjs
-        npm ci
-        npm run build
-        cd ..
-      
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -46,12 +26,6 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
   
-#     - name: Deploy to AWS
-#       uses: reggionick/s3-deploy@v3
-#       with:
-#         bucket: ${{ secrets.S3_BUCKET }}
-#         bucket-region: ${{ secrets.AWS_REGION }}
-      
     - name: zip file
       run: |
         zip -r my-repo.zip .

@@ -18,6 +18,7 @@ import { GameService } from 'src/game/game.service';
 @WebSocketGateway({
 	cors: {
 		origin: "*",
+        credentials: false
 	},
 	middlewares: [],
 	namespace: "/game",

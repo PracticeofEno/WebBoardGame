@@ -13,19 +13,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout 
+      uses: actions/checkout@v3
+      
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
-    
-    - name: mkdir build
-      run: mkdir ./build
-        
+  
     - name: Deploy to AWS
       uses: reggionick/s3-deploy@v3
       with:
-        folder: build
         bucket: ${{ secrets.S3_BUCKET }}
         bucket-region: ${{ secrets.AWS_REGION }}
+      
+    - name: zip file
+      run: |
+        zip -r my-repo.zip .
+        
+    - name: upload to S3
+      run: aws s3 cp --region ap-northeast-2 ./my-repo.zip s3://eno-codedeploydemobucket/
+      
+      
+    - name: deploy with AWS codeDeploy
+      run: aws deploy create-deployment
+        --application-name deploy-test
+        --deployment-config-name CodeDeployDefault.OneAtATime
+        --deployment-group-name deploy-group
+        --s3-location bucket=eno-codedeploydemobucket,bundleType=zip,key=my-repo.zip

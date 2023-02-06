@@ -1,5 +1,14 @@
 version: "3.8"
 services:
+  42-nginx:
+    container_name: nginx
+    image: nginx
+    build: ./nginx
+    ports:
+      - "80:80"
+    networks:
+      - my_network
+
   42-postgres:
     container_name: postgres
     image: postgres:42
@@ -13,16 +22,19 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=test
+      - POSTGRES_DB=alssu
 
   42-backend:
     container_name: backend
     image: backend:42
     build: ./back_nestjs
     ports:
-      - "5000:5000"
+      - "5050:5050"
     networks:
       - my_network
+    environment:
+      - JWT_SECRET=secret
+      - JWT_TIME=3600
     depends_on:
       - 42-postgres
 

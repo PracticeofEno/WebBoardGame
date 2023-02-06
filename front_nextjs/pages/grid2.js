@@ -33,7 +33,8 @@ export default function Grid() {
 	const [winResult, setWinResult] = useState();
 	//aa
 	useEffect( () => {
-		socket = io.connect(`${process.env.NEXT_PUBLIC_BACKEND}/game`, {
+		console.log(`connectd addres : `)
+		socket = io.connect(`/game`, {
             transportOptions: {
                 polling: {
                     extraHeaders: {

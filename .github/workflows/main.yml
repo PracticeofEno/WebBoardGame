@@ -32,7 +32,7 @@ jobs:
         ls
         cd ..
         
-    - name: backend Build
+    - name: front Build
       run: |
         cd front_nextjs
         npm ci

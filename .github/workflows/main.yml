@@ -54,7 +54,7 @@ jobs:
       
     - name: zip file
       run: |
-        zip -r my-repo.zip .
+        zip -r my-repo.zip ./back_nextjs/dist ./front_nextjs/.next/ ./appspec.yml ./scripts ./docker-compose.yaml ./nginx ./database
         
     - name: upload to S3
       run: aws s3 cp --region ap-northeast-2 ./my-repo.zip s3://eno-codedeploydemobucket/

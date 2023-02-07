@@ -1,41 +1,41 @@
-name: Deploy to AWS
+# name: Deploy to AWS
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-env:
-  AWS_REGION: ${{ secrets.AWS_REGION }}
+# env:
+#   AWS_REGION: ${{ secrets.AWS_REGION }}
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16] # 템플릿 기본값: [10.x, 12.x, 14.x]
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         node-version: [16] # 템플릿 기본값: [10.x, 12.x, 14.x]
         
-    steps:
-    - name: Checkout 
-      uses: actions/checkout@v3
+#     steps:
+#     - name: Checkout 
+#       uses: actions/checkout@v3
     
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+#     - name: Configure AWS Credentials
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+#         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         aws-region: ${{ secrets.AWS_REGION }}
   
-    - name: zip file
-      run: |
-        zip -r my-repo.zip .
+#     - name: zip file
+#       run: |
+#         zip -r my-repo.zip .
         
-    - name: upload to S3
-      run: aws s3 cp --region ap-northeast-2 ./my-repo.zip s3://eno-codedeploydemobucket/
+#     - name: upload to S3
+#       run: aws s3 cp --region ap-northeast-2 ./my-repo.zip s3://eno-codedeploydemobucket/
       
-    - name: deploy with AWS codeDeploy
-      run: aws deploy create-deployment
-        --application-name deploy-test
-        --deployment-config-name CodeDeployDefault.OneAtATime
-        --deployment-group-name deploy-group
-        --s3-location bucket=eno-codedeploydemobucket,bundleType=zip,key=my-repo.zip
+#     - name: deploy with AWS codeDeploy
+#       run: aws deploy create-deployment
+#         --application-name deploy-test
+#         --deployment-config-name CodeDeployDefault.OneAtATime
+#         --deployment-group-name deploy-group
+#         --s3-location bucket=eno-codedeploydemobucket,bundleType=zip,key=my-repo.zip

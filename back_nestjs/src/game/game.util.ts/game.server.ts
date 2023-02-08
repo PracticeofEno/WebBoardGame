@@ -1,7 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { Player, SubmitCardDto } from "./game.player";
 import { GAME_STATE } from "../../util/utils"
-import { count } from "console";
 
 export class GameData {
 
@@ -38,7 +37,7 @@ export class GameData {
 	player2_token: number;
 
 
-	getResult() : number {
+	getResult(): number {
 		if (this.players[0].token == this.players[1].token)
 			return 3;
 		if (this.players[0].token > this.players[1].token)
@@ -47,12 +46,12 @@ export class GameData {
 			return 2;
 	}
 
-	getPlayerNumber(client: Socket) : number{
+	getPlayerNumber(client: Socket): number {
 		if (this.players[0].socket.id == client.id)
 			return 1;
 		else if (this.players[1].socket.id == client.id)
 			return 2;
-		else 
+		else
 			return -1;
 	}
 
@@ -88,7 +87,7 @@ export class GameData {
 			return 1;
 		else if (this.player1_card < this.player2_card)
 			return 2;
-		else 
+		else
 			return 3;
 	}
 
@@ -103,21 +102,21 @@ export class GameData {
 			return "tiger";
 	}
 
-	isDropAble() : Boolean {
+	isDropAble(): Boolean {
 		return this.players[this.turn - 1].drop;
 	}
 
-	isEndGame() : Boolean{
-		if (this.players[0].isCardEmpty() == true || this.players[1].isCardEmpty() == true || 
+	isEndGame(): Boolean {
+		if (this.players[0].isCardEmpty() == true || this.players[1].isCardEmpty() == true ||
 			this.players[0].isTokenEmpty() == true || this.players[1].isTokenEmpty() == true) {
-				return true;
-			}
+			return true;
+		}
 		return false;
 	}
 
 	sendTurn() {
 		this.sendMessage("turn", {
-			turn : this.turn,
+			turn: this.turn,
 			state: this.roomState
 		});
 	}
@@ -138,26 +137,23 @@ export class GameData {
 	processBattle() {
 		console.log("processBattle");
 		console.log(`player[0]-> ${this.player1_token} vs player[1]-> ${this.player2_token})`);
+		let pay_player = 0;
+		let token = 0;
 		if (this.player1_token > this.player2_token) {
-			let token = this.player1_token - this.player2_token;
-			this.players[1].decreaseToken(token);
+			pay_player = 1;
+			token = this.player1_token - this.player2_token;
 			this.player2_token = this.player2_token + (token);
-			this.sendMessage("submit_token", {
-				player_number: 2,
-				count: token
-			})
-			console.log(`player[1] submit token ${this.player1_token - this.player2_token}`);
 		}
-		else if (this.player1_token < this.player2_token) {
-			let token = this.player2_token - this.player1_token;
-			this.players[0].decreaseToken(token);
-			this.player1_token = this.player1_token + token;
-			this.sendMessage("submit_token", {
-				player_number: 1,
-				count: token
-			})
-			console.log(`player[0] submit token ${token}`);
+		else {
+			pay_player = 0;
+			token = this.player2_token - this.player1_token;
+			this.player1_token = this.player1_token + (token);
 		}
+		this.players[pay_player].decreaseToken(token);
+		this.sendMessage("submit_token", {
+			player_number: pay_player + 1,
+			count: token
+		})
 
 		let winner = this.getWinnerPlayerNumber();
 		console.log(`winner => ${winner}`);
@@ -173,12 +169,12 @@ export class GameData {
 				winner: winner,
 				player1_card: this.getStringWithCardNumber(this.player1_card),
 				player2_card: this.getStringWithCardNumber(this.player2_card),
-				token: this.player1_token + this.player2_token
+				token: this.player1_token + this.player2_token,
 			});
 			this.matchDraw();
 		}
 		else {
-			if(gamExist) {
+			if (gamExist) {
 				this.players[winner - 1].increaseToken(this.gamAdventage);
 				this.players[looser - 1].decreaseToken(this.gamAdventage);
 				console.log(`gamExist`);
@@ -189,7 +185,8 @@ export class GameData {
 				winner: winner,
 				player1_card: this.getStringWithCardNumber(this.player1_card),
 				player2_card: this.getStringWithCardNumber(this.player2_card),
-				token: this.player1_token + this.player2_token
+				token: this.player1_token + this.player2_token + (gamExist ? this.gamAdventage : 0),
+				gam: gamExist
 			});
 			this.player1_token = 0;
 			this.player2_token = 0;
@@ -215,44 +212,57 @@ export class GameData {
 	processDrop() {
 		if (this.isDropAble()) {
 			let token = (this.turn == 2 ? this.player1_token : this.player2_token);
-			console.log(token);
+			console.log(`${this.player1_token} vs ${this.player2_token}`);
+			console.log(`${this.roomState}`);
 			this.players[this.turn - 1].drop = false;
 			this.sendMessage("drop", {
 				player: this.turn,
-				token: token
+				token: token,
+				state: this.roomState
 			});
 			this.matchDraw();
-			
+
 			this.roomState = GAME_STATE.FIRST_CARD_SELECT;
 			this.sendTurn();
 			console.log(`Process Drop`);
 		}
 		else {
-			this.players[this.turn-1].socket.emit("error", {
+			this.players[this.turn - 1].socket.emit("error", {
 				message: "Can't drop Choice"
 			})
 		}
-		
+
 	}
 
 	processDouble() {
 		let mount;
-		if (this.turn == 1) 
+		let opponent_money
+		if (this.turn == 1) {
 			mount = this.player2_token;
-		else 
+			opponent_money = this.players[1].token;
+		}
+		else {
 			mount = this.player1_token;
+			opponent_money = this.players[0].token;
+		}
 
-		let tf = this.players[this.turn - 1].decreaseToken(mount * 2);
-		this.sendMessage("submit_token", {
-			player_number: this.turn,
-			count: mount * 2
-		})
+		if (opponent_money >= mount) 
+			mount = mount * 2;
+		else
+			mount = opponent_money + mount;
+
+		let tf = this.players[this.turn - 1].decreaseToken(mount);
 		if (tf) {
-			if (this.turn == 1) 
-				this.player1_token = this.player1_token + (mount * 2);
-			else 
-				this.player2_token = this.player2_token + (mount * 2);
-			console.log(`player[${this.turn - 1}}] submit token -> ${mount * 2}`);
+			this.sendMessage("submit_token", {
+				player_number: this.turn,
+				count: mount
+			})
+
+			if (this.turn == 1)
+				this.player1_token = this.player1_token + (mount);
+			else
+				this.player2_token = this.player2_token + (mount);
+			console.log(`player[${this.turn - 1}}] submit token -> ${mount}`);
 			this.roomState = GAME_STATE.THIRD_CHOICE_SELECT;
 			this.turn = (this.turn == 2 ? 1 : 2);
 			this.sendTurn();
@@ -277,7 +287,7 @@ export class GameData {
 			else
 				this.turn = 2;
 			console.log(`${this.room} - turn is ${this.turn == 2 ? "second player" : "first plyaer"}`);
-		
+
 			this.sendMessage("start_game", {
 				player1: player1_dice,
 				player2: player2_dice,
@@ -288,7 +298,7 @@ export class GameData {
 		}
 	}
 
-	submitCard(client: Socket, kind: string) : Boolean {
+	submitCard(client: Socket, kind: string): Boolean {
 		if ((this.roomState == GAME_STATE.FIRST_CARD_SELECT || this.roomState == GAME_STATE.SECOND_CARD_SELECT)
 			&& this.players[this.turn - 1].socket.id == client.id) {
 			if (this.players[this.turn - 1].setCard(kind)) {
@@ -296,7 +306,7 @@ export class GameData {
 				if (this.roomState == GAME_STATE.FIRST_CARD_SELECT) {
 					if (this.turn == 1)
 						this.player1_card = this.ConvertCardNumber(kind);
-					else 
+					else
 						this.player2_card = this.ConvertCardNumber(kind);
 					this.roomState = GAME_STATE.FIRST_MONEY_SELECT;
 					this.sendTurn();
@@ -305,7 +315,7 @@ export class GameData {
 				else if (this.roomState == GAME_STATE.SECOND_CARD_SELECT) {
 					if (this.turn == 1)
 						this.player1_card = this.ConvertCardNumber(kind);
-					else 
+					else
 						this.player2_card = this.ConvertCardNumber(kind);
 					this.roomState = GAME_STATE.SECOND_CHOICE;
 					this.sendTurn();
@@ -323,7 +333,7 @@ export class GameData {
 		}
 	}
 
-	submitToken(client: Socket, count: number) : Boolean{
+	submitToken(client: Socket, count: number): Number {
 		if (this.roomState == GAME_STATE.FIRST_MONEY_SELECT && this.players[this.turn - 1].socket.id == client.id) {
 			if (count >= this.min && count <= this.max) {
 				if (count > this.getMaxToken()) {
@@ -334,40 +344,40 @@ export class GameData {
 					this.roomState = GAME_STATE.SECOND_CARD_SELECT;
 					if (this.turn == 1)
 						this.player1_token = Number(this.player1_token + count);
-					else 
+					else
 						this.player2_token = Number(this.player2_token + count);
 					this.turn = (this.turn == 2 ? 1 : 2);
 					this.sendTurn();
-					return true;
+					return count;
 				}
 				else {
 					client.emit("error", { message: `토큰이 부족합니다` })
-					return false;
+					return -1;
 				}
 			}
 			else {
 				client.emit("error", { message: `제출할 수 있는 유효한 토큰 수는 ${this.min} <= x <= ${this.max} 입니다` })
-				return false;
+				return -1;
 			}
 		}
 		else {
 			client.emit("error", { message: `${this.players[this.turn - 1].nickname} 님의 토큰 제출 차례입니다` })
-			return false;
+			return -1;
 		}
 	}
 
 	submitChoice(client: Socket, choice: string) {
-		if ( ((this.roomState == GAME_STATE.SECOND_CHOICE) || (this.roomState == GAME_STATE.THIRD_CHOICE_SELECT)) && this.players[this.turn - 1].socket.id == client.id) {
+		if (((this.roomState == GAME_STATE.SECOND_CHOICE) || (this.roomState == GAME_STATE.THIRD_CHOICE_SELECT)) && this.players[this.turn - 1].socket.id == client.id) {
 			if (choice == "battle" || choice == "drop" || choice == "double") {
 				if ((this.roomState == GAME_STATE.THIRD_CHOICE_SELECT) && choice == "double") {
 					client.emit("error", { message: `라운드당 따당은 한번만 가능합니다` })
 				}
 				else {
-					if (choice == "battle") 
+					if (choice == "battle")
 						this.processBattle();
 					else if (choice == "drop")
 						this.processDrop();
-					else 
+					else
 						this.processDouble();
 				}
 			}
@@ -383,6 +393,6 @@ export class GameData {
 	printfServerData() {
 		console.log(this);
 	}
-	
-	
+
+
 }

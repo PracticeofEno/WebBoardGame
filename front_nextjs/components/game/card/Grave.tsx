@@ -19,7 +19,7 @@ export default function Grave({cards1, cards2, state}) {
 			</div>
 			{
 				(visible && state > 0) && (
-					<div className="absolute w-[550%] h-2/3 left-[13vw] bg-gray-400 cardBox flex-col z-50 bg-opacity-50">
+					<div className="absolute w-[500%] h-2/3 left-[13vw] bg-gray-400 cardBox flex-col z-50 bg-opacity-50">
 						<div className="flex flex-row relaitve w-[100%] h-[50%] justify-start">
 							{
 								player1Cards.map((value, index) => {

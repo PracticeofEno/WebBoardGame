@@ -11,6 +11,7 @@ import Choise from '../components/game/battle/choise';
 import AlertModal from "../components/modal/AlterModal";
 import ResultContent from "../components/game/battle/result";
 import ResultModal from "../components/modal/ResultModal";
+import internal from 'stream';
 
 let socket;
 
@@ -31,7 +32,7 @@ export default function Grid() {
 	const [myResult, setMyResult] = useState();
 	const [oppoResult, setOppoResult] = useState();
 	const [winResult, setWinResult] = useState();
-	//aa
+
 	useEffect( () => {
 		console.log(`connectd addres : `)
 		socket = io.connect(`/game`, {
@@ -64,11 +65,11 @@ export default function Grid() {
 		const current_player_handler = ({ player1_number, player1_nickname,  player1_avatar, player2_nickname, player2_avatar,player2_number,}) => {
 			console.log(`self_number.current -> ${self_number.current}`);
             if (self_number.current == player1_number) {
-                setMine({ ...mine, nickname: player1_nickname, avatar: player1_avatar, });
-                setOpponent({...opponent, nickname: player2_nickname, avatar: player2_avatar, });
+                setMine({ ...mine, nickname: player1_nickname, avatar: player1_avatar});
+                setOpponent({...opponent, nickname: player2_nickname, avatar: player2_avatar});
             } else if (self_number.current == player2_number) {
-                setMine({ ...mine,nickname: player2_nickname,avatar: player2_avatar, });
-                setOpponent({ ...opponent,nickname: player1_nickname, avatar: player1_avatar,});
+                setMine({ ...mine,nickname: player2_nickname,avatar: player2_avatar});
+                setOpponent({ ...opponent,nickname: player1_nickname, avatar: player1_avatar});
             }
         };
         socket?.on('current_player', current_player_handler);
@@ -105,8 +106,16 @@ export default function Grid() {
         });
 
         socket?.on('end', message => {
-            let message2 = 'winner is ' + message.winner;
-            console.log(message);
+			console.log(message);
+			if (message.winner == self_number.current) {
+				setModalContent(`승자 : ${mine.nickname}`);
+				setModalOpen(true);
+			}
+			else {
+				setModalContent(`승자 : ${opponent.nickname}`);
+				setModalOpen(true);
+			}
+			setGameState(0);
         });
 
         socket?.on('error', data => {
@@ -180,24 +189,31 @@ export default function Grid() {
 			}
 			else if (data.winner == self_number.current) {
 				mine.token = mine.token + (Number(data.token));
+				if (data.gam == true)
+					opponent.token = opponent.token - 10
 			}
 			else {
 				opponent.token = opponent.token + (Number(data.token));
+				if (data.gam == true)
+					mine.token = mine.tokenb - 10
 			}
+
             setMine({
                 ...mine,
                 submit_card: '',
                 submit_cards: mine.submit_cards,
+				submit_token: 0,
 				token: mine.token
             });
             setOpponent({
                 ...opponent,
                 submit_card: '',
                 submit_cards: opponent.submit_cards,
+				submit_token: 0,
 				token: opponent.token
             });
+
 			setResultOpen(true);
-			
         };
         socket?.on('result', result_handler);
 
@@ -205,7 +221,7 @@ export default function Grid() {
             if (data.player_number == self_number.current) {
                 let tmp = mine;
                 tmp['' + data.kind] = tmp['' + data.kind] - 1;
-                setMine({ ...mine, tiger: tmp.tiger,  fox: tmp.fox,  rabbit: tmp.rabbit, gam: tmp.gam, submit_card: data.kind, });
+                setMine({ ...mine, tiger: tmp.tiger,  fox: tmp.fox,  rabbit: tmp.rabbit, gam: tmp.gam, submit_card: data.kind, avatar: mine.avatar});
             } else {
                 let tmp = opponent;
                 tmp.submit_card = '메롱 안보여줌';
@@ -217,7 +233,23 @@ export default function Grid() {
         const drop_handler = (data) => {
 			if (data.player == self_number.current) {
 				mine.drop = false;
-				opponent.token = opponent.token + data.token;
+				if (data.state == GAME_STATE.THIRD_CHOICE_SELECT) {
+					mine.token = mine.token + (data.token / 2)
+					opponent.token = opponent.token + data.token;
+				}
+				else {
+					opponent.token = opponent.token + data.token;
+				}
+				console.log(`drop my tokne ->${mine.token}`)
+			}
+			else {
+				if (data.state == GAME_STATE.THIRD_CHOICE_SELECT) {
+					opponent.token = opponent.token + (data.token / 2)
+					mine.token = mine.token + data.token;
+				}
+				else {
+					mine.token = mine.token + data.token;
+				}
 			}
             mine.submit_cards.push("back");
             opponent.submit_cards.push("back");
@@ -226,6 +258,8 @@ export default function Grid() {
 				drop: mine.drop,
                 submit_card: '',
                 submit_cards: mine.submit_cards,
+				token: mine.token, 
+				avatar: mine.avatar
             });
             setOpponent({
                 ...opponent,
@@ -244,9 +278,11 @@ export default function Grid() {
 			console.log(data.player_number == self_number.current)
 			if (data.player_number == self_number.current) {
                 let tmp = mine.token - data.count;
-                setMine({ ...mine, token: tmp});
+				mine.submit_token = mine.submit_token + data.count;
+                setMine({ ...mine, token: tmp, avatar: mine.avatar});
             } else {
                 opponent.token = opponent.token - data.count;
+				opponent.submit_token = opponent.submit_token + data.count
                 setOpponent({ ...opponent, token: opponent.token });
             }
         };
@@ -287,22 +323,29 @@ export default function Grid() {
 				<ResultContent card_1={oppoResult} card_2={myResult} winner={winResult} self_number={self_number.current} closeFunction={() => setResultOpen(false)}/>
 			</ResultModal>
 			
-            <div className="a border-2 border-red-100">
+            <div className="a border-2 border-red-100 bg-test bg-contain bg-cover">
                 <Grave
                     cards1={mine.submit_cards}
                     cards2={opponent.submit_cards}
                     state={gameState}
                 />
             </div>
-            <div className="b border-2 border-red-100">
+            <div className={`b ${(turn != self_number.current) && (gameState > 0) && 'blink' } 
+							${opponent.avatar == "/api/images/avatar/1" && "bg-1"}
+							${opponent.avatar == "/api/images/avatar/2" && "bg-2"}
+							${opponent.avatar == "/api/images/avatar/3" && "bg-3"}
+							bg-center bg-cover`}>
                 <UserView
                     nickname2={opponent.nickname}
                     src2={opponent.avatar}
                 />
             </div>
-            <div className="c flex justify-center items-center">
+            <div className="c flex justify-center items-center bg-test bg-contain bg-cover">
+			{
+					(gameState > 0) && <p className='font-alssu text-3xl'>x{opponent.submit_token}</p>
+				}	
 				{
-					(gameState > 0) && <p className='font-alssu text-9xl'>x{opponent.token}</p>
+					(gameState > 0) && <p className='font-alssu text-9xl mx-[2rem]'>x{opponent.token}</p>
 				}
             </div>
             <div className="e flex bg-battle bg-cover bg-center bg-no-repeat justify-center items-center">
@@ -318,32 +361,37 @@ export default function Grid() {
                     />
                 )}
             </div>
-            <div className="f">
+            <div className={`f bg-test bg-contain bg-cover ${((turn == self_number.current) && ((gameState == GAME_STATE.SECOND_CHOICE) || gameState == GAME_STATE.THIRD_CHOICE_SELECT)) && 'blink' }`}>
                 {
-					(turn == self_number.current) && (gameState == GAME_STATE.SECOND_CHOICE || gameState == GAME_STATE.THIRD_CHOICE_SELECT) && (
+					(turn == self_number.current) && ((gameState == GAME_STATE.SECOND_CHOICE || gameState == GAME_STATE.THIRD_CHOICE_SELECT)) && (
                         <Choise socket={socket} gameState={gameState} drop={mine.drop}/>
                     )
 				}
             </div>
-            <div className="i flex flex-row justify-center items-center">
-                <CardView
-                    tiger={mine.tiger}
-                    fox={mine.fox}
-                    rabbit={mine.rabbit}
-                    gam={mine.gam}
-                    state={gameState}
-                    socket={socket}
-                />
+            <div className={`i flex flex-row ${((turn == self_number.current) && (gameState == GAME_STATE.FIRST_CARD_SELECT || gameState == GAME_STATE.SECOND_CARD_SELECT)) && 'blink' } bg-test bg-contain bg-cover`}>
+					<CardView
+	                    tiger={mine.tiger}
+                    	fox={mine.fox}
+                    	rabbit={mine.rabbit}
+                    	gam={mine.gam}
+                    	state={gameState}
+                    	socket={socket}
+                	/>
             </div>
-            <div className="j flex justify-center items-center">
+            <div className="j flex flex-row justify-center items-center bg-test bg-contain bg-cover">
 				{
-					(gameState > 0) && <p className='font-alssu text-9xl'>x{mine.token}</p>
+					(gameState > 0) && <p className='font-alssu text-3xl'>x{mine.submit_token}</p>
+				}	
+				{
+					(gameState > 0) && <p className='font-alssu text-9xl mx-[2rem]'>x{mine.token}</p>
 				}
             </div>
-            <div className="l">
+            <div className={`l ${mine.avatar == "/api/images/avatar/1" && "bg-1"}
+							${mine.avatar == "/api/images/avatar/2" && "bg-2"}
+							${mine.avatar == "/api/images/avatar/3" && "bg-3"} bg-center bg-cover`}>
                 <UserView nickname2={mine.nickname} src2={mine.avatar} />
             </div>
-			<div className="k">
+			<div className={`k bg-test bg-contain bg-cover ${((turn == self_number.current) && (gameState == GAME_STATE.FIRST_MONEY_SELECT)) && 'blink' }`}>
 				{
 					(turn == self_number.current && gameState == GAME_STATE.FIRST_MONEY_SELECT) && (
 						<TokenControl socket={socket}/>
@@ -358,11 +406,11 @@ export default function Grid() {
                     grid-template-columns: repeat(8, 1fr);
                     grid-template-rows: 0.5fr 0.5fr 1.5fr 1fr 0.5fr;
                     grid-template-areas:
-                        'b b b b b b b c'
-                        'a e e e e e e f'
-                        'a e e e e e e f'
-                        'i i i i i i i k'
-                        'l l l l l l l j';
+                        'b b b b b b c c'
+                        'a e e e e e f f'
+                        'a e e e e e f f'
+                        'i i i i i i k k'
+                        'l l l l l l j j';
                 }
 
 				.k {
@@ -400,7 +448,17 @@ export default function Grid() {
                 div {
                     border: 1px solid black;
                 }
-            `}</style>
+
+				@keyframes blink-effect {
+					50% {
+					  border-color: #F15B5B;
+					  border-width: 0.25rem;
+					}
+				  }
+				  
+				.blink {
+					animation: blink-effect 1.5s step-end infinite;
+			`}</style>
         </div>
     );
 }

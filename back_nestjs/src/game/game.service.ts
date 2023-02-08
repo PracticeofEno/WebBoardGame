@@ -22,7 +22,7 @@ export class GameService {
 		return this.gameRepository.createGame(room);
 	}
 
-	joinRoom({room, avatar, nickname }, client: Socket) {
+	joinRoom({room, nickname }, client: Socket) {
 		let room_data: GameData = this.gameRepository.findByRoom(room);
 		room_data.sockets.push(client);
 		console.log(room_data.sockets.length);
@@ -37,8 +37,9 @@ export class GameService {
 		if (player) {
 			room_data.players[player - 1].socket = client;
 			room_data.players[player - 1].nickname = nickname;
-			// room_data.players[player - 1].avatar = avatar;
 			client.emit("player", player);
+			console.log(room_data.players[0].avatar)
+			console.log(room_data.players[1].avatar)
 			room_data.sendMessage("current_player", {
 				player1_number: 1,
 				player1_nickname : room_data.players[0].nickname,
@@ -49,7 +50,6 @@ export class GameService {
 			});
 		}
 		else {
-			console.log("aaa");
 			room_data.sendMessage("observer_join", null);
 		}
 	}
@@ -66,7 +66,7 @@ export class GameService {
 				if (this.isGaming(room_data)) {
 					room_data.sendMessage("end",
 					{
-						"winner": player,
+						"winner": player == 2 ? 1 : 2,
 					})
 					//save data
 					console.log(`Wiinner is player ${player}`);
@@ -132,10 +132,10 @@ export class GameService {
 	submitToken(room: string, client: Socket, count: number) {
 		let room_data = this.gameRepository.findByRoom(room);
 		let tf = room_data.submitToken(client, count);
-		if (tf) {
+		if (tf != -1) {
 			room_data.sendMessage("submit_token", {
 				player_number: room_data.getPlayerNumber(client),
-				count: count
+				count: tf
 			})
 		}
 	}

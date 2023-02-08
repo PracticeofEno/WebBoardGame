@@ -32,8 +32,8 @@ export class Player {
         this.five = 5;
         this.ten = 3;
 		this.token = 50;
-		this.nickname="default nickname";
-		this.avatar="/api/images/avatar/1";
+		this.nickname="-";
+		this.avatar=`/api/images/avatar/${Math.floor(Math.random() * 3) + 1}`;
     }
 
 	isCardEmpty() : Boolean {

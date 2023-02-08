@@ -3,6 +3,7 @@ import {
 	Get,
 	HttpException,
 	Param,
+	Query,
 	Response,
 } from '@nestjs/common';
 import { ImagesService } from './images.service';
@@ -27,7 +28,8 @@ export class ImagesController {
 	})
 	@ApiCreatedResponse({ description: 'SVG데이터' })
 	getImage(@Param('number') number, @Response() res) {
-		if (number === undefined) throw new HttpException('number is empty', 400);
+		if (number === undefined) 
+			throw new HttpException('number is empty', 400);
 		let path = join(process.cwd(), './src/images/avatar/' + number + '.svg');
 		console.log(`maked path = ${path}`);
 		if (existsSync(path)) {

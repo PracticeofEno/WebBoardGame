@@ -38,8 +38,6 @@ export class GameService {
 			room_data.players[player - 1].socket = client;
 			room_data.players[player - 1].nickname = nickname;
 			client.emit("player", player);
-			console.log(room_data.players[0].avatar)
-			console.log(room_data.players[1].avatar)
 			room_data.sendMessage("current_player", {
 				player1_number: 1,
 				player1_nickname : room_data.players[0].nickname,

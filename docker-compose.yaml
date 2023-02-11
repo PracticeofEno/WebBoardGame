@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.4"
 services:
   42-nginx:
     container_name: nginx
@@ -29,7 +29,7 @@ services:
     image: backend:42
     build: ./back_nestjs
     ports:
-      - "5050:5050"
+      - "5000:5000"
     networks:
       - my_network
     environment:
@@ -51,7 +51,6 @@ services:
 
 networks:
   my_network:
-    name: my_network
     driver: bridge
 
 volumes:

@@ -11,7 +11,11 @@ import Choise from '../components/game/battle/choise';
 import AlertModal from "../components/modal/AlterModal";
 import ResultContent from "../components/game/battle/result";
 import ResultModal from "../components/modal/ResultModal";
+<<<<<<< HEAD
 import internal from 'stream';
+=======
+import CC from "../components/game/CopyClipBoard";
+>>>>>>> tmp
 
 let socket;
 
@@ -19,6 +23,7 @@ export default function Grid() {
     const [host, setHost] = useState(false); // 방장 여부
     const [startable, setStartable] = useState(false); // 게임 시작 가능 여부
     const self_number = useRef(999);
+	const room_id = useRef("");
     const [turn, setTurn] = useState(-1); //
     const [gameState, setGameState] = useState(GAME_STATE.READY); // 게임 상태
 
@@ -34,7 +39,6 @@ export default function Grid() {
 	const [winResult, setWinResult] = useState();
 
 	useEffect( () => {
-		console.log(`connectd addres : `)
 		socket = io.connect(`/game`, {
             transportOptions: {
                 polling: {
@@ -52,8 +56,8 @@ export default function Grid() {
 
 	useEffect(() => {
 		const player_handler = message => {
-			console.log(`set self_number.current -> ${message}`);
-            self_number.current = message;
+            self_number.current = message.player;
+			room_id.current = message.room_id;
         };
         socket?.on('player', player_handler);
 		return () => {
@@ -63,7 +67,6 @@ export default function Grid() {
 
 	useEffect(() => {
 		const current_player_handler = ({ player1_number, player1_nickname,  player1_avatar, player2_nickname, player2_avatar,player2_number,}) => {
-			console.log(`self_number.current -> ${self_number.current}`);
             if (self_number.current == player1_number) {
                 setMine({ ...mine, nickname: player1_nickname, avatar: player1_avatar});
                 setOpponent({...opponent, nickname: player2_nickname, avatar: player2_avatar});
@@ -81,7 +84,6 @@ export default function Grid() {
 
     useEffect(() => {
         const connect_handler = () => {
-            console.log('socket connect');
         };
         socket?.on('connect', connect_handler);
 
@@ -91,22 +93,22 @@ export default function Grid() {
         socket?.on('host', host_handler);
 
         socket?.on('join_user', message => {
-            console.log('user joined');
         });
 
         const ready_handler = message => {
-            console.log('ready to start');
             setStartable(true);
         };
         socket?.on('ready', ready_handler);
 
         socket?.on('unready', message => {
-            console.log('aa');
             setStartable(false);
         });
 
         socket?.on('end', message => {
+<<<<<<< HEAD
 			console.log(message);
+=======
+>>>>>>> tmp
 			if (message.winner == self_number.current) {
 				setModalContent(`승자 : ${mine.nickname}`);
 				setModalOpen(true);
@@ -125,13 +127,10 @@ export default function Grid() {
 
         const start_handler = data => {
             setGameState(true);
-			
-            console.log('game start');
         };
         socket?.on('start', start_handler);
 
         const turn_handler = data => {
-            console.log(data);
             setTurn(data.turn);
             setGameState(data.state);
         };
@@ -155,19 +154,16 @@ export default function Grid() {
 			setModalContent(`first turn is ${tmp}  --> ${data.player1} vs ${data.player2}`);
 			setModalOpen(true);
 			setStartable(false);
-            console.log('game start');
         };
         socket?.on('start_game', start_game_handler);
 
         const state_change_handler = data => {
             setGameState(data);
-            console.log(`state_change -> ${data}`);
         };
         socket?.on('state_change', state_change_handler);
 
         //결과 나왔을때
         const result_handler = data => {
-            console.log(data);
             if (self_number.current == 1) {
                 mine.submit_cards.push(data.player1_card);
                 opponent.submit_cards.push(data.player2_card);
@@ -234,17 +230,28 @@ export default function Grid() {
 			if (data.player == self_number.current) {
 				mine.drop = false;
 				if (data.state == GAME_STATE.THIRD_CHOICE_SELECT) {
+<<<<<<< HEAD
 					mine.token = mine.token + (data.token / 2)
+=======
+					mine.token = mine.token + Number(data.token / 2)
+>>>>>>> tmp
 					opponent.token = opponent.token + data.token;
 				}
 				else {
 					opponent.token = opponent.token + data.token;
 				}
+<<<<<<< HEAD
 				console.log(`drop my tokne ->${mine.token}`)
 			}
 			else {
 				if (data.state == GAME_STATE.THIRD_CHOICE_SELECT) {
 					opponent.token = opponent.token + (data.token / 2)
+=======
+			}
+			else {
+				if (data.state == GAME_STATE.THIRD_CHOICE_SELECT) {
+					opponent.token = opponent.token + Number(data.token / 2)
+>>>>>>> tmp
 					mine.token = mine.token + data.token;
 				}
 				else {
@@ -259,23 +266,24 @@ export default function Grid() {
                 submit_card: '',
                 submit_cards: mine.submit_cards,
 				token: mine.token, 
+<<<<<<< HEAD
 				avatar: mine.avatar
+=======
+				avatar: mine.avatar,
+				submit_token: 0
+>>>>>>> tmp
             });
             setOpponent({
                 ...opponent,
                 submit_card: '',
                 submit_cards: opponent.submit_cards,
-				token : opponent.token
+				token : opponent.token,
+				submit_token: 0
             });
         };
         socket?.on('drop', drop_handler);
 
 		const submit_token_handler = (data) => {
-			console.log("submit_token_event_handler");
-			console.log(data);
-			console.log(data.player_number);
-			console.log(self_number.current);
-			console.log(data.player_number == self_number.current)
 			if (data.player_number == self_number.current) {
                 let tmp = mine.token - data.count;
 				mine.submit_token = mine.submit_token + data.count;
@@ -303,11 +311,6 @@ export default function Grid() {
 			socket?.off('submit_token', submit_token_handler);
         };
     }, [mine, opponent, turn, gameState, host, startable]);
-
-    function tmp() {
-        console.log(`tmp mine.nickname => ${mine.nickname}`);
-        console.log(`self_number.current is => ${self_number.current}`);
-    }
 
     function start() {
         socket.emit('start', null);
@@ -349,8 +352,11 @@ export default function Grid() {
 				}
             </div>
             <div className="e flex bg-battle bg-cover bg-center bg-no-repeat justify-center items-center">
+				{
+					(host && !startable) && <CC content={`http://teemo-world.link/?c=${room_id.current}`}/>
+				}
                 {host && startable && (
-                    <button onClick={start} className="bg-red-400 w-[5rem] h-[3rem] border-2 border-black">
+                    <button onClick={start} className="bg-red-400 w-[10rem] h-[6rem] border-2 border-black">
                         start
                     </button>
                 )}
@@ -379,10 +385,17 @@ export default function Grid() {
                 	/>
             </div>
             <div className="j flex flex-row justify-center items-center bg-test bg-contain bg-cover">
+<<<<<<< HEAD
 				{
 					(gameState > 0) && <p className='font-alssu text-3xl'>x{mine.submit_token}</p>
 				}	
 				{
+=======
+				{
+					(gameState > 0) && <p className='font-alssu text-3xl'>x{mine.submit_token}</p>
+				}	
+				{
+>>>>>>> tmp
 					(gameState > 0) && <p className='font-alssu text-9xl mx-[2rem]'>x{mine.token}</p>
 				}
             </div>
@@ -412,11 +425,9 @@ export default function Grid() {
                         'i i i i i i k k'
                         'l l l l l l j j';
                 }
-
 				.k {
                     grid-area: k;
                 }
-
                 .a {
                     grid-area: a;
                 }
@@ -444,11 +455,13 @@ export default function Grid() {
                 .l {
                     grid-area: l;
                 }
-
                 div {
                     border: 1px solid black;
                 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> tmp
 				@keyframes blink-effect {
 					50% {
 					  border-color: #F15B5B;

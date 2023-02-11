@@ -4,7 +4,7 @@ import Card from "./Card"
 export default function CardView({ tiger, fox, rabbit, gam, state, socket}) {
 
 	return (
-		<div className="w-full h-full relative flex flex-row justify-center">
+		<div className="w-full h-full relative flex flex-row justify-center items-center">
 			{
 				(tiger > 0 && state > 0) && (
 					<div className="flex flex-row w-[13rem] h-[16rem] mx-1 cardBox">

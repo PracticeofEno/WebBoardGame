@@ -9,16 +9,14 @@ export default function Home({ children, home }) {
 
 	return (
 		<main className="flex flex-col absolute w-full h-full justify-center items-center bg-no-repeat bg-center bg-cover bg-back2">
-			<HomeHeader />
-			<h1 className="font-alssu text-black">얼쑤 : 곶감전</h1>
+			{/* <HomeHeader /> */}
+			<div>
+				<span className="font-alssu text-[8rem] text-black">얼쑤</span>
+				<span className="font-alssu text-[8rem] text-white"> : </span>
+				<span className="font-alssu text-[8rem] text-black">곶감전</span>
+			</div>
 			<LoginUI />
-			<style jsx>
-				{`
-        h1{
-          font-size: 11rem;
-        }
-        `}
-			</style>
+
 		</main>
 	);
 }

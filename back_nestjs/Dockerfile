@@ -5,10 +5,9 @@ COPY package*.json ./
 COPY tsconfig.build.json ./
 COPY tsconfig.json ./
 
-RUN npm install -g npm@8.19.2
+RUN npm install -g npm@latest
 RUN npm install -g npm-check-updates
 RUN ncu -u
-
 RUN npm install
 
-ENTRYPOINT npm run start:dev
+ENTRYPOINT tail -f /dev/null

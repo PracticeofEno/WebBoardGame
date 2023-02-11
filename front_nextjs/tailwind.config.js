@@ -17,6 +17,9 @@ module.exports = {
         'rabbit': "url('/images/rabbit.svg')",
         'gam': "url('/images/gam.svg')",
 		'battle': "url('/images/battle.svg')",
+		'2': "url('/images/rabbit_bg.svg')",
+		'3': "url('/images/tiger_bg.svg')",
+		'1': "url('/images/fox_bg.svg')",
       },
     },
     fontFamily: {

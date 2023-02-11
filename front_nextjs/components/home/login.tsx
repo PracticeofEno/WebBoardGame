@@ -72,14 +72,14 @@ export default function LoginUI() {
 	}
 
 	return (
-		<div className="flex justify-evenly flex-col w-[50rem] h-[50rem]">
+		<div className="flex justify-evenly flex-col w-[35rem] h-[25rem]">
 			<AlterModal isOpen={modalOpen} closeFunction={() => setModalOpen(false)}>
 				{	modalContent	}
 			</AlterModal>
 			<input
 				type="text"
 				onChange={(e) => setNickname(e.target.value)}
-				className="h-24 border text-5xl px-4 placeholder:font-alssu"
+				className="h-16 border text-4xl px-4 my-4 placeholder:font-alssu"
 				value={nickname}
 				placeholder={"아이디"}
 			>
@@ -88,7 +88,7 @@ export default function LoginUI() {
 			<input
 				type="password"
 				onChange={(e) => setPassword(e.target.value)}
-				className="h-24 border text-5xl px-4 placeholder:font-alssu "
+				className="h-16 border text-5xl px-4 my-4 placeholder:font-alssu "
 				value={password}
 				placeholder={"password"}
 			>

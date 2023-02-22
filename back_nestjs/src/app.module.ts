@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ImagesModule } from './images/images.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './configs/typeorm.config';
+import { MatchModule } from './match/match.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { typeORMConfig } from './configs/typeorm.config';
     GameModule, 
     AuthModule,
     TypeOrmModule.forRoot(typeORMConfig),
-    ImagesModule
+    ImagesModule,
+    MatchModule
   ],
   providers: []
 })

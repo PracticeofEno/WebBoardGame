@@ -1,5 +1,5 @@
 # WebBoardGame
-Nextjs 사용해볼겸 카투스 게임즈에서 만든 '얼쑤:곶감전'을 구현
+Nextjs 사용해볼겸 카투스 게임즈에서 만든 '얼쑤:곶감전'을 구현  
 ~~## http://teemo-world.link~~ 
 
 ## 구성

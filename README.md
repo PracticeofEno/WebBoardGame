@@ -1,5 +1,5 @@
 # WebBoardGame
-## http://teemo-world.link
+~~## http://teemo-world.link~~ 
 
 ## 구성
 - front: nextjs
